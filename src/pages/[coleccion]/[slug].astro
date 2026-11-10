@@ -1,0 +1,162 @@
+---
+// Ficha de un elemento con `detalle` (src/lib/paginas.ts, listas de src/data/fichas.ts): /averias/<slug>/ e
+// /instalaciones/<slug>/. Tema Cobalt: cabecera partida en papel 2 con migas, etiqueta, titular, su línea, el plazo o el
+// precio y las teclas (llamar y presupuesto); la foto a la derecha con el tinte frío. Debajo, el `detalle` en párrafos y, al
+// lado, la lista de datos con filetes y un panel cortado para llamar o escribir por WhatsApp; las fotos de `imagenes` en
+// rejilla y las otras fichas de la misma lista como filas con filete.
+import Base from '../../layouts/Base.astro';
+import Imagen from '../../components/ui/Imagen.astro';
+import Icono from '../../components/ui/Icono.astro';
+import { seccion, site, tel, whatsapp } from '../../data/site';
+import { fichas, relacionadas, resumen } from '../../lib/paginas';
+import type { Ficha } from '../../lib/paginas';
+import { jsonLdFicha, jsonLdMigas, urlBase } from '../../lib/seo';
+import { enlace, rutaDeSeccion } from '../../lib/multipagina';
+
+export function getStaticPaths() {
+  return fichas().map((f) => ({ params: { coleccion: f.def.ruta, slug: f.slug }, props: { f } }));
+}
+
+interface Props { f: Ficha }
+const { f } = Astro.props;
+const base = urlBase(Astro.site);
+const nombreSeccion = String(f.seccion.antetitulo || f.seccion.titulo || f.def.nombre).trim();
+const migas = [
+  { nombre: 'Inicio', ruta: '/' },
+  { nombre: nombreSeccion, ruta: rutaDeSeccion(f.idSeccion) },
+  { nombre: f.titulo, ruta: f.url },
+];
+const c = site.contacto;
+const presupuesto = seccion('presupuesto') ? enlace('/#presupuesto') : seccion('contacto') ? enlace('/#contacto') : '';
+const plazo = String(f.elemento.plazo ?? '').trim();
+const datos = f.datos.filter((d) => (d.clave !== 'plazo' || !plazo) && d.clave !== 'precio');
+const wa = whatsapp(c.whatsapp, `Hola, os escribo por: ${f.titulo.toLowerCase()}`);
+const otras = relacionadas(f, 6);
+const descripcion = resumen(f.texto || f.detalle[0] || '');
+---
+
+<Base titulo={f.titulo} descripcion={descripcion} imagen={f.imagen} ld={[jsonLdMigas(base, migas), jsonLdFicha(base, f)]}>
+  <section class="banda banda--clara ficha-cabeza">
+    <div class="contenedor">
+      <nav aria-label="Migas de pan" class="migas">
+        <ol>
+          {migas.map((m, i) => (
+            <li>{i < migas.length - 1 ? <a href={m.ruta}>{m.nombre}</a> : <span aria-current="page">{m.nombre}</span>}</li>
+          ))}
+        </ol>
+      </nav>
+      <div class:list={['ficha-hero', { 'ficha-hero--foto': f.imagen }]}>
+        <div>
+          <p class="antetitulo">{f.categoria || f.def.nombre}</p>
+          <h1 class="titulo-seccion ficha-titulo">{f.titulo}</h1>
+          {f.texto && <p class="entrada mt-4">{f.texto}</p>}
+          {(plazo || f.precio) && (
+            <p class="ficha-valor">
+              {plazo && <span class="estado"><Icono nombre="reloj" tam={18} /><span class="mono">{plazo}</span></span>}
+              {f.precio && <span class="ficha-precio">{f.precio}</span>}
+            </p>
+          )}
+          <div class="botones">
+            {c.telefono && <a class="btn" href={tel(c.telefono)}><Icono nombre="telefono" tam={18} /> Llamar al {c.telefono}</a>}
+            {presupuesto && <a class="btn-sec" href={presupuesto}>{site.boton_cabecera?.texto || 'Pedir presupuesto'}</a>}
+          </div>
+        </div>
+        {f.imagen ? (
+          <div class="ficha-foto foto">
+            <Imagen src={f.imagen} alt={f.titulo} ancho={1300} alto={975} prioridad />
+          </div>
+        ) : (
+          f.icono && <span class="ficha-icono" aria-hidden="true"><Icono nombre={f.icono} tam={72} /></span>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="banda">
+    <div class="contenedor ficha-cuerpo">
+      <article class="texto-largo ficha-detalle">
+        {f.detalle.map((p) => <p>{p}</p>)}
+      </article>
+      <aside class="ficha-lado">
+        {datos.length > 0 && (
+          <dl class="datos">
+            {datos.map((d) => <div><dt>{d.etiqueta}</dt><dd>{d.valor}</dd></div>)}
+          </dl>
+        )}
+        {(c.telefono || wa) && (
+          <div class="ficha-panel corte">
+            <p class="ficha-panel-titulo">¿Te pasa esto ahora?</p>
+            {c.telefono && <a class="ficha-panel-tel" href={tel(c.telefono)}>{c.telefono}</a>}
+            {wa && <a class="btn-sec" href={wa} target="_blank" rel="noopener"><Icono nombre="whatsapp" tam={18} /> Escribir por WhatsApp</a>}
+          </div>
+        )}
+      </aside>
+    </div>
+  </section>
+
+  {f.imagenes.length > 0 && (
+    <section class="banda banda--clara" aria-label={`Fotos de ${f.titulo}`}>
+      <div class="contenedor">
+        <ul class="ficha-galeria">
+          {f.imagenes.map((src, i) => (
+            <li class="foto"><Imagen src={src} alt={`${f.titulo}, foto ${i + 2}`} ancho={1300} alto={975} /></li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {otras.length > 0 && (
+    <section class="banda">
+      <div class="contenedor">
+        <div class="titular cabeza">
+          <h2 class="titulo-seccion">{`Más de ${nombreSeccion.toLowerCase()}`}</h2>
+        </div>
+        <ul class="ficha-otras">
+          {otras.map((o) => (
+            <li>
+              <a href={o.url} class="ficha-otra">
+                {o.icono && <Icono nombre={o.icono} tam={22} />}
+                <span class="ficha-otra-titulo">{o.titulo}</span>
+                {o.texto && <span class="ficha-otra-texto">{o.texto}</span>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .ficha-cabeza { padding-block: 1.5rem 3.5rem; }
+  .ficha-hero { display: grid; gap: 2.5rem; padding-top: 1.5rem; align-items: center; }
+  .ficha-titulo { margin-top: .75rem; font-size: clamp(2rem, 1.1rem + 3.6vw, 4rem); }
+  .ficha-valor { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.5rem; margin-top: 1.5rem; }
+  .ficha-precio { font-family: var(--fuente-titulos); font-weight: 600; font-size: 1.6rem; letter-spacing: -.02em; color: var(--tinta); font-variant-numeric: tabular-nums; }
+  .ficha-foto { aspect-ratio: 4 / 3; border-radius: var(--radio); }
+  .ficha-icono { display: none; }
+  .ficha-cuerpo { display: grid; gap: 3rem; }
+  .ficha-detalle { max-width: 66ch; font-size: 1.1rem; }
+  .ficha-detalle p + p { margin-top: 1.15rem; }
+  .ficha-detalle p:first-child { font-size: 1.25rem; color: var(--tinta); }
+  .ficha-lado { display: grid; gap: 2rem; align-content: start; }
+  .ficha-panel { display: grid; gap: .9rem; justify-items: start; padding: 1.5rem; background: var(--papel-2); }
+  .ficha-panel-titulo { font-family: var(--fuente-titulos); font-weight: 600; font-size: 1.25rem; color: var(--tinta); }
+  .ficha-panel-tel { font-family: var(--fuente-titulos); font-weight: 600; font-size: 2rem; letter-spacing: -.03em; color: var(--acento-legible); text-decoration: none; font-variant-numeric: tabular-nums; }
+  .ficha-galeria { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); }
+  .ficha-galeria li { aspect-ratio: 4 / 3; border-radius: var(--radio); }
+  .ficha-otras { border-top: 1px solid var(--filete-2); }
+  .ficha-otra { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: .85rem; row-gap: .2rem; padding: 1.2rem 0; border-bottom: 1px solid var(--filete); text-decoration: none; color: var(--tinta-2); }
+  .ficha-otra :global(svg) { grid-row: span 2; color: var(--acento-legible); margin-top: .1rem; }
+  .ficha-otra-titulo { font-family: var(--fuente-titulos); font-weight: 500; font-size: 1.25rem; color: var(--tinta); text-decoration: underline; text-decoration-color: var(--filete-2); text-underline-offset: .22em; }
+  .ficha-otra:hover .ficha-otra-titulo { text-decoration-color: var(--c-acento); }
+  @media (min-width: 60rem) {
+    .ficha-cabeza { padding-block: 2rem 5rem; }
+    .ficha-hero--foto { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 4rem; }
+    .ficha-cuerpo { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: 4.5rem; align-items: start; }
+    .ficha-lado { position: sticky; top: calc(var(--alto-cabecera) + 2rem); }
+    .ficha-otra { grid-template-columns: auto minmax(0, 4fr) minmax(0, 7fr); align-items: baseline; column-gap: 1.5rem; }
+    .ficha-otra :global(svg) { grid-row: auto; }
+  }
+</style>

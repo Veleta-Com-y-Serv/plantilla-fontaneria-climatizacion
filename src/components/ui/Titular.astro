@@ -1,0 +1,18 @@
+---
+// Cabeza de sección (adaptado de AstroWind, Headline.astro, © onWidget, MIT). Etiqueta discreta (`antetitulo`, en
+// minúsculas normales), título en Familjen Grotesk y una línea de entrada. `partida`: filete de 1 px encima, título a la
+// izquierda y la entrada a la derecha (la cabeza habitual de las secciones); sin ella, todo en columna.
+interface Props { titulo?: string; antetitulo?: string; texto?: string; class?: string; nivel?: 1 | 2; partida?: boolean }
+const { titulo, antetitulo, texto, class: clase = '', nivel = 2, partida = false } = Astro.props;
+const H = nivel === 1 ? 'h1' : 'h2';
+---
+
+{
+  (titulo || antetitulo || texto) && (
+    <div class:list={['titular', { cabeza: partida }, clase]}>
+      {antetitulo && <p class="antetitulo">{antetitulo}</p>}
+      {titulo && <H class="titulo-seccion">{titulo}</H>}
+      {texto && <p class="entrada">{texto}</p>}
+    </div>
+  )
+}

@@ -1,0 +1,65 @@
+---
+// Trabajos recientes: `trabajos: [{titulo, texto, lugar, imagen}]` como un carril horizontal de fotos grandes que pasa del
+// borde del contenedor (la siguiente se ve cortada), con desplazamiento por toque, rueda y teclado y puntos de ajuste.
+// Debajo de cada foto, el título, el lugar y su línea. Con un solo trabajo, la foto va ancha y sin carril. Los trabajos
+// sin foto salen solo con su texto. Sin trabajos se queda la cabeza.
+import { seccion, conContenido } from '../../data/site';
+import Seccion from '../ui/Seccion.astro';
+import Titular from '../ui/Titular.astro';
+import Imagen from '../ui/Imagen.astro';
+import Icono from '../ui/Icono.astro';
+interface Props { id: string }
+const { id } = Astro.props;
+const s = seccion(id);
+const trabajos = s ? s.trabajos : [];
+---
+
+{
+  conContenido(s, trabajos) && (
+    <section id={id} class="banda banda--clara trabajos">
+      <div class="contenedor">
+        <Titular partida antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+      </div>
+      {trabajos.length > 0 && (
+        <div class:list={['carril', { 'carril--uno': trabajos.length === 1 }]} tabindex="0" role="region" aria-label={s.titulo || 'Trabajos'}>
+          <ul class="carril-lista">
+            {trabajos.map((t) => (
+              <li class="carril-item">
+                {t.imagen && (
+                  <div class="carril-foto foto">
+                    <Imagen src={t.imagen} alt={t.titulo || s.titulo} ancho={1300} alto={975} />
+                  </div>
+                )}
+                <div class="carril-pie">
+                  {t.titulo && <h3 class="carril-titulo">{t.titulo}</h3>}
+                  {t.lugar && <p class="carril-lugar"><Icono nombre="mapa" tam={16} />{t.lugar}</p>}
+                </div>
+                {t.texto && <p class="carril-texto">{t.texto}</p>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
+  )
+}
+
+<style>
+  .carril { overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: var(--margen-lado); scrollbar-width: thin; scrollbar-color: var(--filete-2) transparent; }
+  .carril:focus-visible { outline-offset: -2px; }
+  .carril-lista { display: flex; gap: 1.25rem; padding-inline: var(--margen-lado); padding-bottom: 1rem; width: max-content; }
+  .carril-item { width: min(82vw, 38rem); scroll-snap-align: start; display: grid; align-content: start; gap: .4rem; }
+  .carril-foto { aspect-ratio: 4 / 3; border-radius: var(--radio); }
+  .carril-pie { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1rem; margin-top: .9rem; }
+  .carril-titulo { font-size: 1.3rem; font-weight: 500; }
+  .carril-lugar { display: inline-flex; align-items: center; gap: .35rem; font-family: var(--fuente-titulos); font-weight: 500; font-size: .9375rem; color: var(--apagado); }
+  .carril-lugar :global(svg) { color: var(--acento-legible); }
+  .carril-texto { color: var(--tinta-2); max-width: 48ch; }
+  .carril--uno .carril-lista { width: auto; }
+  .carril--uno .carril-item { width: 100%; max-width: calc(var(--ancho) - 8rem); }
+  .carril--uno .carril-foto { aspect-ratio: 16 / 9; }
+  @media (min-width: 60rem) {
+    .carril-lista { gap: 2rem; }
+    .carril-item { width: 40rem; }
+  }
+</style>

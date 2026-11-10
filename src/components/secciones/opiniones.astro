@@ -1,0 +1,60 @@
+---
+// Opiniones: `testimonios: [{texto, autor, nota}]`. La primera como frase grande en Familjen (la que mejor lo cuenta),
+// las demás debajo en columnas con filete. Autor abajo; `nota` (qué trabajo y dónde) en etiqueta apagada.
+// No inventes opiniones: solo las que dé el cliente (la plataforma deja este apartado desmarcado). Sin opiniones no se pinta.
+import { seccion } from '../../data/site';
+import Seccion from '../ui/Seccion.astro';
+import Titular from '../ui/Titular.astro';
+interface Props { id: string }
+const { id } = Astro.props;
+const s = seccion(id);
+const todas = s ? s.testimonios : [];
+const [primera, ...resto] = todas;
+---
+
+{
+  s && primera && (
+    <Seccion id={id} banda="clara">
+      <Titular partida antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+      <figure class="op-grande">
+        <blockquote><p>{primera.texto}</p></blockquote>
+        {(primera.autor || primera.nota) && (
+          <figcaption>
+            {primera.autor && <span class="op-autor">{primera.autor}</span>}
+            {primera.nota && <span class="etiqueta">{primera.nota}</span>}
+          </figcaption>
+        )}
+      </figure>
+      {resto.length > 0 && (
+        <ul class="op-resto">
+          {resto.map((t) => (
+            <li>
+              <figure>
+                <blockquote><p>{t.texto}</p></blockquote>
+                {(t.autor || t.nota) && (
+                  <figcaption>
+                    {t.autor && <span class="op-autor">{t.autor}</span>}
+                    {t.nota && <span class="etiqueta">{t.nota}</span>}
+                  </figcaption>
+                )}
+              </figure>
+            </li>
+          ))}
+        </ul>
+      )}
+    </Seccion>
+  )
+}
+
+<style>
+  .op-grande blockquote p { font-family: var(--fuente-titulos); font-weight: 500; font-size: clamp(1.5rem, 1.1rem + 1.7vw, 2.6rem); line-height: 1.2; letter-spacing: -.02em; color: var(--tinta); max-width: 42ch; text-wrap: balance; }
+  .op-grande blockquote p::before { content: "“"; margin-left: -.45em; }
+  .op-grande blockquote p::after { content: "”"; }
+  figcaption { display: flex; flex-wrap: wrap; gap: .25rem 1rem; align-items: baseline; margin-top: 1.25rem; }
+  .op-autor { font-family: var(--fuente-titulos); font-weight: 600; color: var(--tinta); }
+  .op-resto { display: grid; gap: 2rem; margin-top: 3.5rem; }
+  .op-resto li { padding-top: 1.5rem; border-top: 1px solid var(--filete-2); }
+  .op-resto blockquote p { font-size: 1.1rem; color: var(--tinta-2); max-width: 52ch; }
+  @media (min-width: 40rem) { .op-grande blockquote p::before { margin-left: -.45em; } }
+  @media (min-width: 60rem) { .op-resto { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4rem; } }
+</style>

@@ -1,0 +1,57 @@
+---
+// Pedir presupuesto (para instalaciones): a la izquierda la cabeza, las garantías (`items: [{titulo, texto, icono}]`) en
+// filas con filete y la `nota`; a la derecha el formulario completo (nombre, teléfono, localidad, tipo de trabajo con las
+// instalaciones y averías de la web, mensaje) en un panel cortado. `boton_formulario` cambia el texto del botón.
+import { seccion } from '../../data/site';
+import Seccion from '../ui/Seccion.astro';
+import Titular from '../ui/Titular.astro';
+import Icono from '../ui/Icono.astro';
+import FormularioContacto from '../ui/FormularioContacto.astro';
+interface Props { id: string }
+const { id } = Astro.props;
+const s = seccion(id);
+const izquierda = Boolean(s && (s.titulo || s.antetitulo || s.texto || s.items.length || s.nota));
+const boton = String(s?.boton_formulario ?? '').trim() || 'Pedir presupuesto';
+---
+
+{
+  s && (
+    <Seccion id={id}>
+      <div class:list={['pres-rejilla', { 'pres-rejilla--solo': !izquierda }]}>
+        {izquierda && <div>
+          <Titular antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+          {s.items.length > 0 && (
+            <ul class="pres-garantias">
+              {s.items.map((it) => (
+                <li>
+                  <Icono nombre={String(it.icono || 'check')} tam={22} />
+                  <div>
+                    <p class="pres-garantia">{it.titulo}</p>
+                    {it.texto && <p class="pres-garantia-texto">{it.texto}</p>}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+          {s.nota && <p class="estado pres-nota"><Icono nombre="reloj" tam={18} />{s.nota}</p>}
+        </div>}
+        <div class="pres-panel corte">
+          <FormularioContacto modelo="completo" prefijo={`${id}-f`} boton={boton} />
+        </div>
+      </div>
+    </Seccion>
+  )
+}
+
+<style>
+  .pres-rejilla { display: grid; gap: 2.5rem; }
+  .pres-garantias { margin-top: 2.25rem; border-top: 1px solid var(--filete-2); }
+  .pres-garantias li { display: flex; gap: .85rem; align-items: flex-start; padding: 1rem 0; border-bottom: 1px solid var(--filete); }
+  .pres-garantias :global(svg) { color: var(--acento-legible); flex-shrink: 0; margin-top: .1rem; }
+  .pres-garantia { font-family: var(--fuente-titulos); font-weight: 500; font-size: 1.15rem; color: var(--tinta); }
+  .pres-garantia-texto { color: var(--tinta-2); }
+  .pres-nota { margin-top: 1.5rem; font-weight: 500; }
+  .pres-panel { padding: 1.5rem 1.25rem; background: var(--papel-2); }
+  @media (min-width: 40rem) { .pres-panel { padding: 2.25rem; } }
+  @media (min-width: 60rem) { .pres-rejilla--solo { grid-template-columns: minmax(0, 48rem) !important; } .pres-rejilla { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 4.5rem; align-items: start; } }
+</style>

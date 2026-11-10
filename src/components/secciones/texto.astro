@@ -1,0 +1,61 @@
+---
+// Apartado de texto genérico: etiqueta, título, párrafos, foto opcional al lado, lista de puntos con icono y botón.
+// Lo usan los apartados nuevos que pide el cliente (site.yaml: `tipo: texto`).
+import { seccion, conContenido, parrafos, externo } from '../../data/site';
+import { altSeccion } from '../../lib/seo';
+import Seccion from '../ui/Seccion.astro';
+import Imagen from '../ui/Imagen.astro';
+import Icono from '../ui/Icono.astro';
+interface Props { id: string }
+const s = seccion(Astro.props.id);
+---
+
+{
+  conContenido(s, s?.items ?? []) && (
+    <Seccion id={Astro.props.id}>
+      <div class:list={['txt-rejilla', { 'txt-rejilla--foto': s.imagen }]}>
+        <div>
+          {s.antetitulo && <p class="antetitulo">{s.antetitulo}</p>}
+          {s.titulo && <h2 class="titulo-seccion mt-3">{s.titulo}</h2>}
+          {parrafos(s.texto).length > 0 && (
+            <div class="txt-parrafos">
+              {parrafos(s.texto).map((p) => <p>{p}</p>)}
+            </div>
+          )}
+          {s.items.length > 0 && (
+            <ul class="txt-puntos">
+              {s.items.map((it) => (
+                <li>
+                  <Icono nombre={String(it.icono || 'check')} tam={22} />
+                  <div>
+                    <p class="txt-punto">{it.titulo}</p>
+                    {it.texto && <p>{it.texto}</p>}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+          {s.cta && (
+            <p class="mt-8"><a class="btn" href={s.cta.url} {...(externo(s.cta.url) && { rel: 'noopener', target: '_blank' })}>{s.cta.texto}</a></p>
+          )}
+        </div>
+        {s.imagen && (
+          <div class="txt-foto foto">
+            <Imagen src={s.imagen} alt={altSeccion(s)} ancho={1200} alto={900} />
+          </div>
+        )}
+      </div>
+    </Seccion>
+  )
+}
+
+<style>
+  .txt-rejilla { display: grid; gap: 2.5rem; }
+  .txt-parrafos { margin-top: 1.5rem; display: grid; gap: 1rem; max-width: 62ch; }
+  .txt-puntos { margin-top: 2rem; border-top: 1px solid var(--filete-2); max-width: 62ch; }
+  .txt-puntos li { display: flex; gap: .85rem; padding: 1rem 0; border-bottom: 1px solid var(--filete); }
+  .txt-puntos :global(svg) { color: var(--acento-legible); flex-shrink: 0; margin-top: .15rem; }
+  .txt-punto { font-family: var(--fuente-titulos); font-weight: 500; font-size: 1.15rem; color: var(--tinta); }
+  .txt-foto { aspect-ratio: 4 / 3; border-radius: var(--radio); }
+  @media (min-width: 60rem) { .txt-rejilla--foto { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 4rem; align-items: center; } }
+</style>

@@ -1,0 +1,234 @@
+# Contenido de la web. Es lo único que rellena la plataforma NoExpertise.
+# Una sola página: el menú apunta a anclas (#id-de-sección).
+# Las secciones se muestran en el orden de este fichero. Para ocultar una: activa: false.
+# Apartado nuevo: un id propio (es su ancla, /#id) con `tipo:` = el diseño de otra sección o `texto`.
+# Listas planas: nunca una lista dentro de un elemento de lista. Precios y plazos, siempre entre comillas.
+nombre: Fontanería y Clima Jalón
+eslogan: Fontaneros e instaladores de calefacción y aire acondicionado en Calatayud y comarca.
+sector: fontaneria
+logo: ""          # ruta a una imagen en public/ (p. ej. /logo.svg). Vacío = nombre en texto.
+colores:
+  primario: "#141b2a"   # grafito: banda de los pasos
+  acento: "#1d5fd6"     # cobalto: tecla principal, foco, enlaces y el campo de caracteres de la portada
+  fondo: "#f8fbfe"      # papel casi blanco y frío
+  texto: "#111825"      # tinta azul grisácea
+contacto:
+  telefono: "976 000 000"
+  email: avisos@fontaneriajalon.es
+  direccion: Calle Dato 14, 50300 Calatayud (Zaragoza)
+  horario: "Lunes a viernes, de 8:00 a 19:00. Sábados, de 9:00 a 13:00. Urgencias, todos los días."
+  whatsapp: "+34 650 000 000"
+redes:
+  instagram: https://www.instagram.com/
+  facebook: https://www.facebook.com/
+  linkedin: ""
+menu:
+  - { texto: Averías, url: "/#averias" }
+  - { texto: Instalaciones, url: "/#instalaciones" }
+  - { texto: Mantenimiento, url: "/#mantenimiento" }
+  - { texto: Zonas, url: "/#zonas" }
+  - { texto: Contacto, url: "/#contacto" }
+boton_cabecera: { texto: Pedir presupuesto, url: "/#presupuesto" }
+seo:
+  titulo: Fontanería y Clima Jalón · Fontanero en Calatayud
+  descripcion: "Fugas, desatascos y calderas hoy mismo en Calatayud y comarca. Aerotermia, aire acondicionado y mantenimiento con precio antes de empezar."
+  tipo: Plumber
+marca_pie: true
+
+secciones:
+  hero:
+    activa: true
+    antetitulo: Fontaneros y calefactores en Calatayud
+    titulo: Tu avería, resuelta hoy
+    texto: "Fugas, desatascos y calderas en Calatayud. Te decimos a qué hora llegamos."
+    imagen: /fotos/hero.jpg
+    destacado: { titulo: Urgencias todos los días, texto: "Te devolvemos la llamada en menos de una hora." }
+    cta: { texto: Llamar ahora, url: "tel:+34976000000" }
+    cta_secundario: { texto: Escribir por WhatsApp, url: "https://wa.me/34650000000" }
+    items:
+      - { titulo: Instaladores de gas autorizados }
+      - { titulo: Precio antes de empezar }
+      - { titulo: Garantía por escrito }
+
+  averias:
+    activa: true
+    antetitulo: Averías y urgencias
+    titulo: Lo que arreglamos hoy mismo
+    texto: "Llámanos con la avería y te decimos cuándo llegamos. Te damos el precio antes de tocar nada."
+    imagen: /fotos/averias.jpg
+    cta: { texto: Llamar por una avería, url: "tel:+34976000000" }
+    averias:
+      - titulo: Fugas de agua
+        texto: "Cortamos el agua, localizamos la fuga sin romper de más y la reparamos."
+        plazo: "Hoy"
+        icono: gota
+        detalle: |
+          Una fuga no espera: cada hora que pasa el agua empapa paredes, suelos y, a veces, el techo del vecino de abajo. Por eso, si nos llamas por una fuga, te devolvemos la llamada enseguida y te explicamos por teléfono cómo cerrar la llave de paso mientras llegamos.
+
+          En casa buscamos el punto exacto antes de picar. Miramos el contador con todos los grifos cerrados, revisamos las zonas húmedas y, si hace falta, usamos cámara y detector para no abrir la pared entera. Así la reparación es más rápida y el arreglo de albañilería, más pequeño.
+
+          Cambiamos el tramo de tubería dañado, el latiguillo o la llave que falla, probamos la instalación con presión y te dejamos todo recogido. Si la fuga ha causado daños, te damos un informe con fotos para el seguro.
+      - titulo: Desatascos
+        texto: "Fregaderos, inodoros, duchas y bajantes de comunidades."
+        plazo: "Hoy"
+        icono: desague
+        detalle: |
+          Un fregadero que no traga, un inodoro que rebosa o una ducha que tarda en vaciarse casi siempre tienen arreglo en la misma visita. Llegamos con el material para desatascar a mano o a presión, según dónde esté el tapón.
+
+          Primero vemos de dónde viene el problema: si es un sifón, un tramo de desagüe con poca pendiente o una bajante de la comunidad. Desatascamos, comprobamos que el agua corre bien y te contamos qué lo ha causado para que no vuelva a pasar.
+
+          En comunidades de vecinos limpiamos bajantes y arquetas y, si el atasco se repite, te proponemos el arreglo de fondo con su precio por escrito antes de empezar.
+      - titulo: Calderas que no arrancan
+        texto: "Diagnóstico y reparación de calderas de gas y de gasóleo."
+        plazo: "Hoy o mañana"
+        icono: fuego
+        detalle: |
+          Si la caldera se apaga, da un código de error o no calienta el agua, llámanos y cuéntanos qué ves en la pantalla. Muchas veces te podemos decir por teléfono si es algo que puedes resolver tú, como subir la presión, o si hace falta que vayamos.
+
+          Reparamos calderas de gas natural, propano y gasóleo de las marcas habituales. Llevamos en la furgoneta las piezas que más se estropean, así que en la mayoría de los casos la caldera queda funcionando en la primera visita. Si hace falta pedir una pieza, te decimos el plazo y el precio antes de encargarla.
+
+          Si la caldera es muy antigua y la reparación no compensa, te lo decimos con claridad y te damos el presupuesto de una caldera nueva para que decidas con calma.
+      - { titulo: Sin agua caliente, texto: "Termos y calentadores: reparación o cambio en el día.", plazo: "24 h", icono: termometro }
+      - { titulo: El aire no enfría, texto: "Carga de gas, limpieza y averías de splits y conductos.", plazo: "24-48 h", icono: copo }
+      - { titulo: Olor a gas, texto: "Cierra la llave, abre las ventanas y llámanos. Revisamos la instalación.", plazo: "Urgente", icono: alerta }
+
+  instalaciones:
+    activa: true
+    antetitulo: Instalaciones
+    titulo: Calor en invierno, fresco en verano
+    texto: "Te asesoramos, lo instalamos y te dejamos el equipo funcionando y explicado."
+    items:
+      - titulo: Calderas de condensación
+        texto: "Cambio de caldera en un día, con retirada de la vieja y legalización."
+        icono: fuego
+        imagen: /fotos/caldera.jpg
+        precio: "desde 1.890 €"
+        imagenes: "/fotos/trabajo-tuberias.jpg"
+        detalle: |
+          Cambiar una caldera vieja por una de condensación es la forma más directa de gastar menos gas sin cambiar de costumbres. Las calderas actuales aprovechan el calor de los humos que las antiguas tiraban por la chimenea, y se regulan solas para no encenderse y apagarse a cada rato.
+
+          Vamos a tu casa, vemos la caldera que tienes, la salida de humos y la instalación, y te recomendamos la potencia que de verdad necesitas. Te damos un presupuesto cerrado por escrito con la caldera, el montaje, la retirada de la vieja y los papeles de la instalación.
+
+          El cambio se hace normalmente en un día. Al terminar ponemos la caldera en marcha, la ajustamos, comprobamos la combustión y te enseñamos a manejarla y a programarla. Te dejamos la garantía del fabricante y la nuestra por escrito.
+      - titulo: Aerotermia
+        texto: "Calefacción, agua caliente y frío con una bomba de calor."
+        icono: sol
+        imagen: /fotos/aerotermia.jpg
+        detalle: |
+          La aerotermia saca el calor del aire de fuera para calentar tu casa y el agua de la ducha, incluso en invierno. Funciona con electricidad y no necesita gas ni depósito de gasóleo, y en verano puede dar también frío si la instalación lo permite.
+
+          Es ideal con suelo radiante o radiadores grandes, y en casas bien aisladas. Antes de proponértela estudiamos la vivienda: superficie, aislamiento, emisores que tienes y uso que haces del agua caliente. Si no compensa en tu caso, te lo decimos.
+
+          Nos encargamos de todo: unidad exterior, depósito de agua caliente, conexión con tu instalación y puesta en marcha. Si hay ayudas o subvenciones abiertas para tu caso, te explicamos cuáles son y te ayudamos con la documentación.
+      - titulo: Aire acondicionado
+        texto: "Splits y conductos, con instalación limpia y tubos ocultos."
+        icono: copo
+        imagen: /fotos/aire-acondicionado.jpg
+        precio: "desde 690 €"
+        detalle: |
+          Instalamos equipos de aire acondicionado de pared (splits), multisplit para varias habitaciones y sistemas por conductos para toda la casa. Todos los equipos que montamos son bomba de calor: enfrían en verano y dan calor en los días templados.
+
+          En la visita miramos dónde va cada aparato, por dónde pasan los tubos y dónde se pone la unidad de fuera, para que se vea lo menos posible y no moleste a los vecinos. Te recomendamos la potencia según los metros y la orientación de cada estancia.
+
+          El montaje se hace en una mañana para un split. Hacemos el vacío de la instalación, comprobamos que no hay fugas, te explicamos el mando y te dejamos la garantía por escrito. También damos de alta el equipo para que tengas el mantenimiento al día.
+      - { titulo: Suelo radiante, texto: "Para obra nueva y reformas completas, con colector por estancias.", icono: radiador, imagen: /fotos/suelo-radiante.jpg }
+      - { titulo: Termos y calentadores, texto: "Eléctricos, de gas o con bomba de calor.", icono: gota, precio: "desde 290 €" }
+      - { titulo: Reformas de baño, texto: "Cambio de bañera por plato de ducha y baño completo.", icono: ducha }
+      - { titulo: Fontanería completa, texto: "Instalaciones nuevas de agua y desagües en pisos y casas.", icono: grifo }
+
+  proceso:
+    activa: true
+    antetitulo: Cómo trabajamos
+    titulo: De la llamada a la reparación
+    texto: "Sin esperas a ciegas ni sorpresas en la factura."
+    items:
+      - { titulo: Nos llamas, texto: "Por teléfono o WhatsApp. Te preguntamos qué pasa y te decimos qué hacer mientras.", icono: telefono }
+      - { titulo: Te damos hora, texto: "Una franja concreta, no «a lo largo del día». Si nos retrasamos, te avisamos.", icono: reloj }
+      - { titulo: Precio antes de empezar, texto: "Vemos la avería y te decimos lo que cuesta. Tú decides.", icono: euro }
+      - { titulo: Reparado y con garantía, texto: "Probamos todo contigo, recogemos y te dejamos la garantía por escrito.", icono: escudo }
+
+  trabajos:
+    activa: true
+    antetitulo: Trabajos recientes
+    titulo: Así dejamos cada instalación
+    texto: "Algunos trabajos de los últimos meses en Calatayud y los pueblos de alrededor."
+    trabajos:
+      - { titulo: Baño con plato de ducha, lugar: Calatayud, texto: "Fuera la bañera, plato extraplano, mampara y grifo termostático.", imagen: /fotos/trabajo-bano.jpg }
+      - { titulo: Sala de calderas de una comunidad, lugar: Calatayud, texto: "Dos calderas nuevas, tuberías aisladas y bombas de bajo consumo.", imagen: /fotos/trabajo-sala-calderas.jpg }
+      - { titulo: Termo nuevo en un lavadero, lugar: Ateca, texto: "Cambio de termo de 80 litros con válvula y latiguillos nuevos.", imagen: /fotos/trabajo-termo.jpg }
+      - { titulo: Instalación de agua en una reforma, lugar: Terrer, texto: "Tubería multicapa nueva y llaves de corte por estancias.", imagen: /fotos/trabajo-tuberias.jpg }
+
+  mantenimiento:
+    activa: true
+    antetitulo: Contratos de mantenimiento
+    titulo: Tu caldera revisada cada año
+    texto: "La revisión obligatoria hecha a tiempo y alguien a quien llamar cuando algo falla."
+    marca_destacado: El más elegido
+    nota: "Sin permanencia. Las piezas se pagan aparte y siempre con el precio antes de cambiarlas."
+    cta: { texto: Contratar el mantenimiento, url: "/#contacto" }
+    planes:
+      - { nombre: Caldera, precio: "79 €", periodo: al año, incluye: "Revisión anual obligatoria; Limpieza y análisis de combustión; Certificado para tu seguro", destacado: false }
+      - { nombre: Caldera y aire, precio: "119 €", periodo: al año, incluye: "Todo lo del plan Caldera; Limpieza de filtros y carga del aire; Prioridad en averías", destacado: true }
+      - { nombre: Comunidades, precio: "Consultar", periodo: "", incluye: "Salas de calderas y grupos de presión; Bajantes y arquetas; Informe después de cada visita", destacado: false }
+
+  zonas:
+    activa: true
+    antetitulo: Dónde trabajamos
+    titulo: Calatayud y 40 km alrededor
+    texto: "Valle del Jalón, del Jiloca y la zona de Alhama. Si tu pueblo no está, pregúntanos."
+    imagen: /fotos/furgoneta.jpg
+    titulo_pagina: "Fontanero en {zona}"
+    texto_pagina: "Averías, calderas, aire acondicionado y fontanería en {zona}. Te decimos a qué hora llegamos y el precio antes de empezar."
+    items:
+      - titulo: Calatayud
+        texto: "Es nuestra casa: aquí tenemos el almacén, en la calle Dato, y desde aquí salen las furgonetas cada mañana. Atendemos fugas, desatascos y calderas en todos los barrios, del casco antiguo a las urbanizaciones nuevas, y llevamos el mantenimiento de salas de calderas de varias comunidades de vecinos. En Calatayud llegamos antes que nadie: si nos llamas por una urgencia por la mañana, lo normal es que estemos en tu casa ese mismo día."
+      - titulo: Ateca
+        texto: "Trabajamos a menudo en Ateca, a un cuarto de hora por la autovía. Muchas casas tienen calderas de gasóleo que piden revisión cada año y tuberías antiguas que conviene cambiar antes de que den un susto. Reparamos averías, cambiamos termos y calderas, instalamos aire acondicionado para el verano y hacemos la fontanería completa de las reformas. Vamos a ver el trabajo sin compromiso y te damos el precio por escrito."
+      - titulo: Terrer
+        texto: "En Terrer, pegado a Calatayud, hacemos sobre todo instalaciones de agua en reformas, cambios de bañera por plato de ducha y mantenimiento de calderas. Al estar tan cerca, podemos pasar el mismo día a ver una avería o a medir para un presupuesto. También atendemos a los pueblos de alrededor y a las naves del polígono cuando tienen un problema con el agua o la calefacción."
+      - titulo: Alhama de Aragón
+        texto: "Alhama de Aragón y los pueblos del valle, como Bubierca y Cetina, tienen inviernos fríos y casas de piedra que tardan en calentarse. Aquí instalamos calderas de condensación, aerotermia y suelo radiante en reformas completas, y reparamos las averías de siempre: tuberías heladas, calderas que se paran y termos que dejan de calentar. Te decimos el día y la franja en que pasamos."
+      - { titulo: Maluenda }
+      - { titulo: Paracuellos de Jiloca }
+      - { titulo: Morata de Jiloca }
+      - { titulo: Sabiñán }
+      - { titulo: Fuentes de Jiloca }
+      - { titulo: Villarroya de la Sierra }
+
+  opiniones:
+    activa: true
+    antetitulo: Opiniones
+    titulo: Lo que dicen quienes nos llaman
+    testimonios:
+      - { texto: "Se nos reventó una tubería un sábado por la tarde y a la hora estaban en casa. Nos dijeron el precio antes de empezar y no hubo ni un euro más.", autor: Marisa L., nota: "Fuga de agua, Calatayud" }
+      - { texto: "Nos cambiaron la caldera en un día y nos enseñaron a programarla. Este invierno hemos notado la diferencia en la factura.", autor: Jorge y Elena, nota: "Caldera de condensación, Ateca" }
+      - { texto: "Llevan el mantenimiento de la comunidad desde hace años. Avisan antes de venir y dejan un informe de lo que han hecho.", autor: Comunidad de la calle Goya, nota: "Mantenimiento, Calatayud" }
+
+  presupuesto:
+    activa: true
+    antetitulo: Presupuesto sin compromiso
+    titulo: Cuéntanos qué quieres instalar
+    texto: "Una caldera, aerotermia, aire acondicionado o un baño nuevo. Rellena el formulario y te llamamos para ir a verlo."
+    nota: "Sin compromiso. Te contestamos en un día laborable."
+    boton_formulario: Pedir presupuesto
+    items:
+      - { titulo: Visita y medición gratis, texto: "Vamos a verlo y te recomendamos lo que de verdad necesitas.", icono: plano }
+      - { titulo: Precio cerrado por escrito, texto: "Equipo, montaje y papeles en un solo precio.", icono: euro }
+      - { titulo: Te ayudamos con las ayudas, texto: "Si hay subvenciones para tu caso, te las explicamos.", icono: check }
+
+  preguntas:
+    activa: true
+    antetitulo: Preguntas frecuentes
+    titulo: Lo que nos preguntan al teléfono
+    preguntas:
+      - { pregunta: "¿Cuánto cuesta que vengáis a ver una avería?", respuesta: "Te decimos el precio de la salida al llamar. Una vez en casa, vemos la avería y te damos el precio de la reparación antes de empezar. Si no te convence, solo pagas la salida." }
+      - { pregunta: "¿Atendéis urgencias en fin de semana?", respuesta: "Sí. Fugas, atascos y calderas paradas en invierno los atendemos todos los días. Llama al teléfono y te devolvemos la llamada en menos de una hora." }
+      - { pregunta: "¿Cada cuánto hay que revisar la caldera?", respuesta: "Las calderas de gas deben revisarse cada año o cada dos, según el tipo, y la inspección de la instalación de gas toca cada cinco años. Con el contrato de mantenimiento te avisamos cuando toca." }
+      - { pregunta: "¿Me compensa la aerotermia?", respuesta: "Depende de la casa: aislamiento, superficie y si tienes suelo radiante o radiadores grandes. Vamos a verla y te decimos con números si te compensa o no." }
+      - { pregunta: "¿Qué garantía tienen las reparaciones?", respuesta: "Todas nuestras reparaciones e instalaciones tienen garantía por escrito. Si algo falla, volvemos sin coste." }
+
+  contacto:
+    activa: true
+    antetitulo: Contacto
+    titulo: Llámanos o escríbenos
+    texto: "Para una avería, mejor por teléfono. Para un presupuesto, como prefieras."

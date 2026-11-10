@@ -1,0 +1,88 @@
+---
+// Formulario sin servidor: si hay email en site.yaml abre el programa de correo (mailto) con los campos en el cuerpo.
+// Si no hay email, se queda como muestra y lo avisa. Para un envío real, cambia `action` por el de tu proveedor.
+// Modelos: `corto` (hero: nombre, teléfono, qué necesitas), `completo` (presupuesto: + localidad y tipo de trabajo,
+// con las opciones de servicios.items) y `contacto` (nombre, email o teléfono, mensaje).
+// `prefijo` hace únicos los ids cuando hay varios formularios en la misma página.
+import { site, tiposDeTrabajo } from '../../data/site';
+interface Props { boton?: string; class?: string; asunto?: string; modelo?: 'corto' | 'completo' | 'contacto'; prefijo?: string }
+const {
+  boton = 'Enviar',
+  class: clase = '',
+  asunto = `Presupuesto desde la web de ${site.nombre}`,
+  modelo = 'contacto',
+  prefijo = 'f',
+} = Astro.props;
+const email = site.contacto.email;
+const accion = email ? `mailto:${email}?subject=${encodeURIComponent(asunto)}` : '';
+const tipos = modelo === 'completo' ? tiposDeTrabajo() : [];
+const id = (campo: string) => `${prefijo}-${campo}`;
+---
+
+<form class:list={['formulario', clase]} action={accion || undefined} method="post" enctype="text/plain">
+  {
+    modelo === 'contacto' ? (
+      <>
+        <div class="campo">
+          <label for={id('nombre')}>Nombre</label>
+          <input id={id('nombre')} name="nombre" type="text" autocomplete="name" required />
+        </div>
+        <div class="campo">
+          <label for={id('contacto')}>Email o teléfono</label>
+          <input id={id('contacto')} name="contacto" type="text" autocomplete="email" required />
+        </div>
+      </>
+    ) : (
+      <div class="campo-doble">
+        <div class="campo">
+          <label for={id('nombre')}>Nombre</label>
+          <input id={id('nombre')} name="nombre" type="text" autocomplete="name" required />
+        </div>
+        <div class="campo">
+          <label for={id('telefono')}>Teléfono</label>
+          <input id={id('telefono')} name="telefono" type="tel" autocomplete="tel" inputmode="tel" required />
+        </div>
+      </div>
+    )
+  }
+  {
+    modelo === 'completo' && (
+      <div class="campo-doble">
+        <div class="campo">
+          <label for={id('localidad')}>Localidad</label>
+          <input id={id('localidad')} name="localidad" type="text" autocomplete="address-level2" />
+        </div>
+        {tipos.length > 0 ? (
+          <div class="campo">
+            <label for={id('tipo')}>Tipo de trabajo</label>
+            <select id={id('tipo')} name="tipo_de_trabajo">
+              {tipos.map((t) => <option value={t}>{t}</option>)}
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+        ) : (
+          <div class="campo">
+            <label for={id('tipo')}>Tipo de trabajo</label>
+            <input id={id('tipo')} name="tipo_de_trabajo" type="text" />
+          </div>
+        )}
+      </div>
+    )
+  }
+  <div class="campo">
+    <label for={id('mensaje')}>{modelo === 'corto' ? '¿Qué necesitas?' : 'Mensaje'}</label>
+    <textarea id={id('mensaje')} name="mensaje" rows={modelo === 'corto' ? 3 : 5} required></textarea>
+  </div>
+  <label class="campo-check">
+    <input type="checkbox" name="privacidad" required />
+    <span>He leído el <a href="/aviso-legal">aviso legal y la política de privacidad</a>.</span>
+  </label>
+  <button type="submit" class="btn">{boton}</button>
+  <p class="formulario-aviso">
+    {
+      email
+        ? 'Al enviar se abre tu programa de correo con el mensaje listo.'
+        : 'Formulario de muestra: todavía no envía mensajes. Usa el teléfono o el email de contacto.'
+    }
+  </p>
+</form>

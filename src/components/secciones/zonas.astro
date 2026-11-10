@@ -1,0 +1,63 @@
+---
+// Dónde trabajamos: `items: [{titulo}]` (las localidades) como un índice en columnas con filetes; la primera, la base,
+// en Familjen más grande. Las zonas con `texto` tienen página propia en /zonas/<slug>/ (src/lib/paginas.ts): su nombre
+// enlaza a ella. `imagen` opcional a la derecha (la furgoneta, el pueblo). `titulo_pagina` y `texto_pagina` son para esas
+// páginas («Fontanero en {zona}»). Sin localidades se queda la cabeza, el texto y la foto.
+import { seccion, conContenido, externo } from '../../data/site';
+import { altSeccion } from '../../lib/seo';
+import { enlaceDe } from '../../lib/paginas';
+import Seccion from '../ui/Seccion.astro';
+import Titular from '../ui/Titular.astro';
+import Imagen from '../ui/Imagen.astro';
+import Icono from '../ui/Icono.astro';
+interface Props { id: string }
+const { id } = Astro.props;
+const s = seccion(id);
+const zonas = s ? s.items.filter((z) => String(z.titulo ?? '').trim()) : [];
+---
+
+{
+  conContenido(s, zonas) && (
+    <Seccion id={id}>
+      <Titular partida antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+      <div class:list={['zonas-cuerpo', { 'zonas-cuerpo--foto': s.imagen }]}>
+        {zonas.length > 0 && (
+          <ul class="zonas-indice">
+            {zonas.map((z, i) => (
+              <li class:list={['zona', { 'zona--base': i === 0 }]}>
+                <Icono nombre="mapa" tam={18} />
+                {enlaceDe(z) ? <a href={enlaceDe(z)}>{z.titulo}</a> : <span>{z.titulo}</span>}
+              </li>
+            ))}
+          </ul>
+        )}
+        {s.imagen && (
+          <div class="zonas-foto foto">
+            <Imagen src={s.imagen} alt={altSeccion(s)} ancho={1300} alto={731} />
+          </div>
+        )}
+      </div>
+      {s.cta && (
+        <p class="mt-10">
+          <a class="btn" href={s.cta.url} {...(externo(s.cta.url) && { rel: 'noopener', target: '_blank' })}>{s.cta.texto}</a>
+        </p>
+      )}
+    </Seccion>
+  )
+}
+
+<style>
+  .zonas-cuerpo { display: grid; gap: 2.5rem; }
+  .zonas-indice { columns: 2 12rem; column-gap: 2rem; border-top: 1px solid var(--filete-2); }
+  .zona { break-inside: avoid; display: flex; align-items: center; gap: .55rem; min-height: 3.25rem; padding-block: .5rem; border-bottom: 1px solid var(--filete); font-family: var(--fuente-titulos); font-weight: 500; font-size: 1.1rem; color: var(--tinta); }
+  .zona :global(svg) { color: var(--apagado); flex-shrink: 0; }
+  .zona a { color: inherit; text-decoration: underline; text-decoration-color: var(--filete-2); text-underline-offset: .25em; }
+  .zona a:hover { text-decoration-color: var(--c-acento); }
+  .zona--base { font-weight: 600; font-size: 1.3rem; }
+  .zona--base :global(svg) { color: var(--acento-legible); }
+  .zonas-foto { aspect-ratio: 4 / 3; border-radius: var(--radio); }
+  @media (min-width: 60rem) {
+    .zonas-cuerpo--foto { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 4rem; align-items: start; }
+    .zonas-indice { columns: 2; }
+  }
+</style>

@@ -1,0 +1,72 @@
+---
+// Cabecera «cobalto»: fija arriba, a todo el ancho y siempre sólida (papel con filete de 1 px; al bajar, una sombra
+// corta). Nombre en Familjen Grotesk, enlaces con subrayado cobalto al pasar, el teléfono a la vista y la tecla
+// cobalto de `boton_cabecera` (llamar o pedir presupuesto). En móvil: nombre, tecla «Llamar» y menú plegable con
+// <details>. Va por encima de la portada (z-index 50). Aspecto: .cabecera--cobalto en src/styles/global.css.
+import { site, tel } from '../data/site';
+import type { Enlace } from '../data/site';
+import Icono from './ui/Icono.astro';
+interface Props { variante?: string; cta?: Enlace | null }
+const { variante = 'cobalto', cta = null } = Astro.props;
+const telefono = site.contacto.telefono;
+---
+
+<header class={`cabecera cabecera--${variante}`} data-cabecera>
+  <div class="contenedor cabecera-fila">
+    <a href="/" class="marca" aria-label={`${site.nombre}, inicio`}>
+      {
+        site.logo ? (
+          <img src={site.logo} alt={site.nombre} class="marca-logo" width="160" height="40" />
+        ) : (
+          <span class="marca-nombre">{site.nombre}</span>
+        )
+      }
+    </a>
+    <nav class="cabecera-nav" aria-label="Menú principal">
+      {site.menu.map((e) => <a href={e.url}>{e.texto}</a>)}
+    </nav>
+    {
+      telefono && (
+        <a class="cabecera-telefono" href={tel(telefono)}>
+          <Icono nombre="telefono" tam={18} />
+          {telefono}
+        </a>
+      )
+    }
+    {cta && cta.url && <a href={cta.url} class="btn cabecera-cta">{cta.texto}</a>}
+    {
+      telefono && (
+        <a class="btn cabecera-llamar" href={tel(telefono)} aria-label={`Llamar al ${telefono}`}>
+          <Icono nombre="telefono" tam={18} />
+          Llamar
+        </a>
+      )
+    }
+    {
+      site.menu.length > 0 && (
+        <details class="menu-movil">
+          <summary>
+            <span class="menu-movil-icono" aria-hidden="true" />
+            <span>Menú</span>
+          </summary>
+          <nav class="menu-movil-panel" aria-label="Menú">
+            {site.menu.map((e) => <a href={e.url}>{e.texto}</a>)}
+            {cta && cta.url && <a href={cta.url} class="btn">{cta.texto}</a>}
+          </nav>
+        </details>
+      )
+    }
+  </div>
+</header>
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.menu-movil a').forEach(function (a) {
+      a.addEventListener('click', function () { a.closest('details').open = false; });
+    });
+    var cabecera = document.querySelector('[data-cabecera]');
+    if (!cabecera) return;
+    function revisar() { cabecera.classList.toggle('con-sombra', window.scrollY > 16); }
+    revisar();
+    window.addEventListener('scroll', revisar, { passive: true });
+  });
+</script>

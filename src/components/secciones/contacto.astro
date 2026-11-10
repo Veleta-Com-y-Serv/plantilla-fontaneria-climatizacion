@@ -1,0 +1,94 @@
+---
+// Contacto: a la izquierda la cabeza, el teléfono en Familjen a tamaño de cifra (lo más grande de la sección) y las teclas
+// de llamar y WhatsApp; a la derecha, el email, la dirección (con enlace al mapa) y el horario en filas con filete, todo
+// de site.yaml → contacto. Si la sección «presupuesto» no está activa, debajo sale el formulario de contacto en un panel
+// cortado; si lo está y hay `imagen`, la foto. `boton_formulario` cambia el texto del botón.
+import { seccion, conContenido, site, tel, whatsapp, mapa } from '../../data/site';
+import { altSeccion } from '../../lib/seo';
+import Seccion from '../ui/Seccion.astro';
+import Titular from '../ui/Titular.astro';
+import Icono from '../ui/Icono.astro';
+import Imagen from '../ui/Imagen.astro';
+import FormularioContacto from '../ui/FormularioContacto.astro';
+interface Props { id: string }
+const { id } = Astro.props;
+const s = seccion(id);
+const c = site.contacto;
+const conFormulario = !seccion('presupuesto');
+const botonForm = String(s?.boton_formulario ?? '').trim() || undefined;
+---
+
+{
+  s && (conFormulario || conContenido(s, [c.telefono, c.whatsapp, c.email, c.direccion, c.horario].filter(Boolean))) && (
+    <Seccion id={id}>
+      <div class="cont-rejilla">
+        <div>
+          <Titular antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+          {c.telefono && <a class="cont-telefono" href={tel(c.telefono)}>{c.telefono}</a>}
+          {(c.telefono || c.whatsapp) && (
+            <div class="botones">
+              {c.telefono && <a class="btn" href={tel(c.telefono)}><Icono nombre="telefono" tam={18} /> Llamar</a>}
+              {c.whatsapp && (
+                <a class="btn-sec" href={whatsapp(c.whatsapp, `Hola, os escribo desde la web de ${site.nombre}`)} rel="noopener" target="_blank">
+                  <Icono nombre="whatsapp" tam={18} /> WhatsApp
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+        {(c.email || c.direccion || c.horario) && (
+          <dl class="cont-datos">
+            {c.email && (
+              <div>
+                <dt><Icono nombre="correo" tam={20} />Email</dt>
+                <dd><a href={`mailto:${c.email}`}>{c.email}</a></dd>
+              </div>
+            )}
+            {c.direccion && (
+              <div>
+                <dt><Icono nombre="mapa" tam={20} />Dirección</dt>
+                <dd><a href={mapa(c.direccion)} rel="noopener" target="_blank">{c.direccion}</a></dd>
+              </div>
+            )}
+            {c.horario && (
+              <div>
+                <dt><Icono nombre="reloj" tam={20} />Horario</dt>
+                <dd>{c.horario}</dd>
+              </div>
+            )}
+          </dl>
+        )}
+      </div>
+      {conFormulario ? (
+        <div class="cont-form corte">
+          <FormularioContacto modelo="contacto" prefijo={`${id}-f`} boton={botonForm} />
+        </div>
+      ) : (
+        s.imagen && (
+          <div class="cont-foto foto">
+            <Imagen src={s.imagen} alt={altSeccion(s)} ancho={1600} alto={686} />
+          </div>
+        )
+      )}
+    </Seccion>
+  )
+}
+
+<style>
+  .cont-rejilla { display: grid; gap: 2.5rem; }
+  .cont-telefono { display: inline-block; margin-top: 2rem; font-family: var(--fuente-titulos); font-weight: 600; font-size: clamp(2.4rem, 1.4rem + 4.2vw, 5rem); line-height: 1; letter-spacing: -.035em; color: var(--tinta); text-decoration: none; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .cont-telefono:hover { color: var(--acento-legible); }
+  .cont-datos { border-top: 1px solid var(--filete-2); align-self: end; }
+  .cont-datos > div { display: grid; gap: .3rem; padding: 1.25rem 0; border-bottom: 1px solid var(--filete); }
+  .cont-datos dt { display: flex; align-items: center; gap: .5rem; font-family: var(--fuente-titulos); font-weight: 500; font-size: .9375rem; color: var(--apagado); }
+  .cont-datos dt :global(svg) { color: var(--acento-legible); }
+  .cont-datos dd { font-size: 1.15rem; color: var(--tinta); overflow-wrap: anywhere; }
+  .cont-datos a { color: inherit; }
+  .cont-form { margin-top: 3rem; padding: 1.5rem 1.25rem; background: var(--papel-2); }
+  .cont-foto { margin-top: 3rem; aspect-ratio: 21 / 9; border-radius: var(--radio); }
+  @media (min-width: 40rem) { .cont-form { padding: 2.25rem; } }
+  @media (min-width: 60rem) {
+    .cont-rejilla { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 5rem; }
+    .cont-form { max-width: 48rem; margin-left: auto; }
+  }
+</style>

@@ -1,0 +1,78 @@
+---
+// Contratos de mantenimiento: `planes: [{nombre, precio, periodo, incluye, destacado}]` en columnas separadas por filetes
+// verticales (sin tarjetas): nombre, precio grande en Familjen (tal cual, «79 €», «Consultar»), periodo, lo que incluye
+// (`incluye` con «; ») y una tecla. El plan `destacado` lleva la palabra de `marca_destacado` y la tecla cobalto; los demás,
+// la tecla de papel. Debajo, `nota`. La tecla lleva a `cta.url` (por defecto, al contacto). Sin planes no se pintan columnas.
+import { seccion, conContenido, partes, externo } from '../../data/site';
+import { enlace } from '../../lib/multipagina';
+import Seccion from '../ui/Seccion.astro';
+import Titular from '../ui/Titular.astro';
+import Icono from '../ui/Icono.astro';
+interface Props { id: string }
+const { id } = Astro.props;
+const s = seccion(id);
+const planes = s ? s.planes : [];
+const destino = s?.cta?.url || enlace('/#contacto');
+const boton = s?.cta?.texto || 'Pedir información';
+const marca = String(s?.marca_destacado ?? '').trim();
+---
+
+{
+  conContenido(s, planes, s?.nota ? [1] : []) && (
+    <Seccion id={id}>
+      <Titular partida antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+      {planes.length > 0 && (
+        <ul class="planes" style={`--n:${Math.min(planes.length, 4)}`}>
+          {planes.map((p) => (
+            <li class:list={['plan', { 'plan--destacado': p.destacado }]}>
+              <div class="plan-cabeza">
+                <h3 class="plan-nombre">{p.nombre}</h3>
+                {p.destacado && marca && <p class="plan-marca">{marca}</p>}
+              </div>
+              {p.precio && (
+                <p class="plan-precio">
+                  <span class="plan-importe">{p.precio}</span>
+                  {p.periodo && <span class="plan-periodo">{p.periodo}</span>}
+                </p>
+              )}
+              {partes(p.incluye).length > 0 && (
+                <ul class="plan-incluye">
+                  {partes(p.incluye).map((x) => <li><Icono nombre="check" tam={18} />{x}</li>)}
+                </ul>
+              )}
+              <p class="plan-accion">
+                <a class={p.destacado ? 'btn' : 'btn-sec'} href={destino} {...(externo(destino) && { rel: 'noopener', target: '_blank' })}>{boton}</a>
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
+      {s.nota && <p class="planes-nota">{s.nota}</p>}
+      {!planes.length && s.cta && (
+        <p class="mt-8"><a class="btn" href={s.cta.url}>{s.cta.texto}</a></p>
+      )}
+    </Seccion>
+  )
+}
+
+<style>
+  .planes { display: grid; border-top: 1px solid var(--filete-2); }
+  .plan { display: flex; flex-direction: column; gap: 1.25rem; padding: 2rem 0; border-bottom: 1px solid var(--filete); min-width: 0; }
+  .plan-cabeza { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1rem; }
+  .plan-nombre { font-size: clamp(1.35rem, 1.15rem + .7vw, 1.7rem); font-weight: 500; }
+  .plan-marca { font-family: var(--fuente-titulos); font-weight: 500; font-size: .9375rem; color: var(--acento-legible); }
+  .plan-precio { display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .6rem; }
+  .plan-importe { font-family: var(--fuente-titulos); font-weight: 600; font-size: clamp(2.5rem, 1.9rem + 2.4vw, 3.75rem); line-height: 1; letter-spacing: -.035em; color: var(--tinta); font-variant-numeric: tabular-nums; }
+  .plan-periodo { font-family: var(--fuente-titulos); font-weight: 500; color: var(--apagado); }
+  .plan-incluye { display: grid; gap: .6rem; color: var(--tinta-2); }
+  .plan-incluye li { display: flex; gap: .55rem; align-items: flex-start; }
+  .plan-incluye :global(svg) { color: var(--acento-legible); flex-shrink: 0; margin-top: .2rem; }
+  .plan-accion { margin-top: auto; padding-top: .5rem; }
+  .planes-nota { margin-top: 1.75rem; color: var(--apagado); max-width: 70ch; }
+  @media (min-width: 60rem) {
+    .planes { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); border-bottom: 1px solid var(--filete); }
+    .plan { padding: 2.25rem 2.25rem 2.5rem; border-bottom: 0; border-left: 1px solid var(--filete); }
+    .plan:first-child { padding-left: 0; border-left: 0; }
+    .plan:last-child { padding-right: 0; }
+  }
+</style>

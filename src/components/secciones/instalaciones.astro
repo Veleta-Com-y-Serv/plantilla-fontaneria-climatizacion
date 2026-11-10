@@ -1,0 +1,97 @@
+---
+// Instalaciones (calderas, aerotermia, aire acondicionado…): `items: [{titulo, texto, icono, imagen, precio}]`.
+// Las que traen `imagen` van como fotos grandes en una rejilla de 12 columnas de anchos alternos (7 y 5, 5 y 7); las que
+// no, debajo, como filas con filete (icono, nombre, texto y precio). Las que tienen `detalle` tienen página propia en
+// /instalaciones/<slug>/ (src/lib/paginas.ts): su nombre enlaza a ella. Precio opcional, tal cual («desde 1.890 €»).
+// Sus nombres son también las opciones de «Tipo de trabajo» del formulario de presupuesto.
+import { seccion, conContenido, externo } from '../../data/site';
+import { altFicha } from '../../lib/seo';
+import { enlaceDe } from '../../lib/paginas';
+import Seccion from '../ui/Seccion.astro';
+import Titular from '../ui/Titular.astro';
+import Imagen from '../ui/Imagen.astro';
+import Icono from '../ui/Icono.astro';
+interface Props { id: string }
+const { id } = Astro.props;
+const s = seccion(id);
+const items = s ? s.items : [];
+const conFoto = items.filter((it) => String(it.imagen ?? '').trim());
+const sinFoto = items.filter((it) => !String(it.imagen ?? '').trim());
+const precio = (it: Record<string, unknown>) => String(it.precio ?? '').trim();
+---
+
+{
+  conContenido(s, items) && (
+    <Seccion id={id} banda="clara">
+      <Titular partida antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+      {conFoto.length > 0 && (
+        <ul class:list={['inst-fotos', { 'inst-fotos--impar': conFoto.length % 2 === 1 }]}>
+          {conFoto.map((it) => (
+            <li class="inst-tarjeta">
+              <div class="inst-foto foto">
+                <Imagen src={String(it.imagen)} alt={altFicha(it)} ancho={1300} alto={975} />
+              </div>
+              <div class="inst-pie">
+                <h3 class="inst-titulo">
+                  {enlaceDe(it) ? <a href={enlaceDe(it)}>{it.titulo}</a> : it.titulo}
+                </h3>
+                {precio(it) && <p class="inst-precio">{precio(it)}</p>}
+              </div>
+              {it.texto && <p class="inst-texto">{it.texto}</p>}
+            </li>
+          ))}
+        </ul>
+      )}
+      {sinFoto.length > 0 && (
+        <ul class="inst-filas">
+          {sinFoto.map((it) => (
+            <li class="inst-fila">
+              <span class="inst-icono"><Icono nombre={String(it.icono || 'herramienta')} tam={24} /></span>
+              <h3 class="inst-fila-titulo">{enlaceDe(it) ? <a href={enlaceDe(it)}>{it.titulo}</a> : it.titulo}</h3>
+              {it.texto && <p class="inst-fila-texto">{it.texto}</p>}
+              {precio(it) && <p class="inst-fila-precio">{precio(it)}</p>}
+            </li>
+          ))}
+        </ul>
+      )}
+      {s.cta && (
+        <p class="mt-10">
+          <a class="btn" href={s.cta.url} {...(externo(s.cta.url) && { rel: 'noopener', target: '_blank' })}>{s.cta.texto}</a>
+        </p>
+      )}
+    </Seccion>
+  )
+}
+
+<style>
+  .inst-fotos { display: grid; gap: 3rem 2rem; }
+  .inst-tarjeta { display: grid; align-content: start; gap: .5rem; min-width: 0; }
+  .inst-foto { aspect-ratio: 4 / 3; border-radius: var(--radio); }
+  .inst-pie { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1.25rem; margin-top: 1rem; }
+  .inst-titulo { font-size: clamp(1.35rem, 1.1rem + .9vw, 1.75rem); font-weight: 500; }
+  .inst-titulo a, .inst-fila-titulo a { color: inherit; text-decoration: underline; text-decoration-color: var(--filete-2); text-underline-offset: .22em; }
+  .inst-titulo a:hover, .inst-fila-titulo a:hover { text-decoration-color: var(--c-acento); }
+  .inst-precio, .inst-fila-precio { font-family: var(--fuente-titulos); font-weight: 600; font-size: 1.1rem; color: var(--tinta); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .inst-texto { color: var(--tinta-2); max-width: 52ch; }
+  .inst-filas { margin-top: 4rem; border-top: 1px solid var(--filete-2); }
+  .inst-fila { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 1rem; row-gap: .25rem; padding: 1.25rem 0; border-bottom: 1px solid var(--filete); }
+  .inst-icono { grid-row: span 3; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; color: var(--acento-legible); border: 1px solid var(--filete-2); border-radius: var(--radio-campo); background: var(--papel); }
+  .inst-fila-titulo { font-size: 1.25rem; font-weight: 500; align-self: center; }
+  .inst-fila-texto { color: var(--tinta-2); }
+  @media (min-width: 40rem) {
+    .inst-fotos { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+    .inst-tarjeta { grid-column: span 6; }
+  }
+  @media (min-width: 60rem) {
+    .inst-tarjeta:nth-child(4n + 1), .inst-tarjeta:nth-child(4n + 4) { grid-column: span 7; }
+    .inst-tarjeta:nth-child(4n + 2), .inst-tarjeta:nth-child(4n + 3) { grid-column: span 5; }
+    .inst-tarjeta:nth-child(4n + 2) .inst-foto, .inst-tarjeta:nth-child(4n + 3) .inst-foto { aspect-ratio: 15 / 16; }
+    .inst-fila { grid-template-columns: auto minmax(0, 4fr) minmax(0, 6fr) minmax(0, 2fr); align-items: center; column-gap: 1.5rem; padding: 1.4rem 0; }
+    .inst-icono { grid-row: auto; }
+    .inst-fila-precio { justify-self: end; }
+  }
+  @media (min-width: 40rem) {
+    .inst-fotos--impar .inst-tarjeta:last-child { grid-column: 1 / -1; }
+    .inst-fotos--impar .inst-tarjeta:last-child .inst-foto { aspect-ratio: 21 / 9; }
+  }
+</style>

@@ -1,0 +1,13 @@
+---
+// Envoltorio de sección (adaptado de AstroWind, WidgetWrapper.astro, © onWidget, MIT, LICENSE-ASTROWIND.md).
+// La banda (fuera) lleva el fondo y el ritmo vertical; el contenedor (dentro), el ancho y el margen lateral.
+// `banda`: papel (por defecto), clara (papel 2 con filetes) o grafito (el color primario).
+interface Props { id?: string; class?: string; contenedor?: string; banda?: 'papel' | 'clara' | 'grafito'; etiqueta?: string }
+const { id, class: clase = '', contenedor = '', banda = 'papel', etiqueta } = Astro.props;
+---
+
+<section class:list={['banda', `banda--${banda}`, clase]} id={id} aria-label={etiqueta}>
+  <div class:list={['contenedor', contenedor]}>
+    <slot />
+  </div>
+</section>

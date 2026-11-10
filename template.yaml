@@ -1,0 +1,123 @@
+# Metadatos de la plantilla para el catálogo de NoExpertise.
+id: fontaneria-climatizacion
+nombre: Fontanería y climatización
+descripcion: "Web técnica y limpia para fontaneros e instaladores: averías hoy, calderas, aerotermia y aire."
+sectores:
+  - fontaneria
+  - { id: climatizacion, nombre: Climatización }
+  - { id: calefaccion, nombre: Calefacción y gas }
+  - instalaciones
+secciones:
+  - { id: hero, nombre: Portada }
+  - { id: averias, nombre: Averías y urgencias }
+  - { id: instalaciones, nombre: Instalaciones }
+  - { id: proceso, nombre: Cómo trabajamos }
+  - { id: trabajos, nombre: Trabajos recientes }
+  - { id: mantenimiento, nombre: Mantenimiento }
+  - { id: zonas, nombre: Zonas de trabajo }
+  - { id: opiniones, nombre: Opiniones }
+  - { id: presupuesto, nombre: Pedir presupuesto }
+  - { id: preguntas, nombre: Preguntas frecuentes }
+  - { id: contacto, nombre: Contacto }
+estilo: cobalt
+plan_minimo: gratis
+version: 1.0.0
+base: astrowind
+demo_url: https://demo-plantilla-fontaneria-climatizacion.noexpertise.com
+activa: true
+orden: 720
+
+# Páginas propias (docs/plantillas.md § Fichas por elemento y páginas por zona). Espejo en src/data/fichas.ts.
+# Cada avería con `detalle` tiene su página en /averias/<slug>/, cada instalación con `detalle` en /instalaciones/<slug>/
+# y cada zona con `texto`, en /zonas/<slug>/ («Fontanero en Ateca»).
+fichas:
+  - { lista: averias, campo: averias, ruta: averias, nombre: Avería, tipo: Service }
+  - { lista: instalaciones, campo: items, ruta: instalaciones, nombre: Instalación, tipo: Service }
+zonas:
+  ruta: zonas
+
+# Varias páginas (docs/plantillas.md § Varias páginas): reparto recomendado al activar «Varias páginas».
+# Inicio se queda con la portada, las averías, los trabajos y las opiniones.
+paginas:
+  - { ruta: instalaciones, titulo: Instalaciones, secciones: "instalaciones; proceso" }
+  - { ruta: mantenimiento, titulo: Mantenimiento, secciones: "mantenimiento" }
+  - { ruta: zonas-de-trabajo, titulo: Dónde trabajamos, secciones: "zonas" }
+  - { ruta: contacto, titulo: Presupuesto y contacto, secciones: "presupuesto; preguntas; contacto" }
+
+# Asistente de puesta en marcha (NoExpertise): un paso por pantalla. Rutas del site sin índices;
+# tipos: texto y lista (la IA propone), datos, fotos, eleccion (colores y logo) y repaso.
+asistente:
+  - id: negocio
+    titulo: "Tu empresa"
+    pregunta: "¿Cómo se llama tu empresa y qué hacéis: fontanería, calefacción, gas, aire acondicionado…?"
+    ayuda: "Por ejemplo: fontaneros y calefactores en Calatayud, instaladores de gas autorizados, urgencias todos los días. Di también en qué ciudad o comarca estáis."
+    tipo: texto
+    campos: [nombre, eslogan, seo.titulo, seo.descripcion, secciones.hero.antetitulo, secciones.hero.titulo, secciones.hero.texto, secciones.hero.destacado.titulo, secciones.hero.destacado.texto]
+  - id: contacto
+    titulo: "Cómo te llaman"
+    pregunta: "¿Dónde estáis y cómo os pueden llamar o escribir cuando tienen una avería?"
+    ayuda: "Solo lo que quieras que vean tus clientes. El teléfono sale arriba en la web y en una barra fija en el móvil; si usáis WhatsApp, saldrá también un botón para escribiros."
+    tipo: datos
+    campos: [contacto.telefono, contacto.whatsapp, contacto.email, contacto.direccion, contacto.horario, redes.instagram, redes.facebook]
+  - id: averias
+    titulo: "Averías que atendéis"
+    pregunta: "¿Qué averías y urgencias arregláis? Una por línea, con cuándo podéis ir si quieres."
+    ayuda: "Por ejemplo: «Fugas de agua, hoy», «Desatascos, hoy», «Calderas que no arrancan, hoy o mañana», «El aire no enfría, en 24-48 h»."
+    tipo: lista
+    campos: [secciones.averias.averias]
+  - id: instalaciones
+    titulo: "Lo que instaláis"
+    pregunta: "¿Qué instaláis? Una cosa por línea, con el precio «desde» si lo dais."
+    ayuda: "Por ejemplo: «Calderas de condensación, desde 1.890 €», «Aerotermia», «Aire acondicionado, desde 690 €», «Suelo radiante», «Termos y calentadores», «Reformas de baño»."
+    tipo: lista
+    campos: [secciones.instalaciones.items]
+  - id: proceso
+    titulo: "Cómo trabajáis"
+    pregunta: "¿Cómo es un aviso con vosotros, desde que os llaman hasta que queda arreglado?"
+    ayuda: "Tres o cuatro pasos. Por ejemplo: nos llamas, te damos hora, te decimos el precio antes de empezar, lo dejamos funcionando y con garantía."
+    tipo: texto
+    campos: [secciones.proceso.titulo, secciones.proceso.texto, secciones.proceso.items]
+  - id: trabajos
+    titulo: "Trabajos hechos"
+    pregunta: "Cuéntame algunos trabajos que hayáis hecho hace poco: qué y en qué pueblo. Uno por línea."
+    ayuda: "Por ejemplo: «Cambio de caldera en Ateca», «Baño con plato de ducha en Calatayud». Las fotos de cada uno las pones luego en Contenido."
+    tipo: lista
+    campos: [secciones.trabajos.trabajos]
+  - id: mantenimiento
+    titulo: "Contratos de mantenimiento"
+    pregunta: "¿Hacéis contratos de mantenimiento o revisiones de caldera y aire? Dime cada plan, qué incluye y su precio."
+    ayuda: "Por ejemplo: «Caldera: revisión anual y análisis de combustión, 79 € al año». Si no hacéis, salta este paso y luego oculta el apartado en Contenido."
+    tipo: lista
+    campos: [secciones.mantenimiento.planes]
+  - id: zonas
+    titulo: "Dónde trabajáis"
+    pregunta: "¿En qué ciudad, pueblos o barrios trabajáis?"
+    ayuda: "Escribe primero donde tenéis la base y luego los pueblos de alrededor. Por ejemplo: Calatayud, Ateca, Terrer, Alhama de Aragón."
+    tipo: texto
+    campos: [secciones.zonas.titulo, secciones.zonas.texto, secciones.zonas.items]
+  - id: presupuesto
+    titulo: "Presupuestos"
+    pregunta: "Para una instalación, ¿cómo dais el presupuesto? ¿Vais a verlo, es gratis, en cuánto contestáis?"
+    ayuda: "Por ejemplo: visita gratis, precio cerrado por escrito con el equipo y el montaje, contestamos en un día laborable."
+    tipo: texto
+    campos: [secciones.presupuesto.titulo, secciones.presupuesto.texto, secciones.presupuesto.items, secciones.presupuesto.nota]
+  - id: preguntas
+    titulo: "Preguntas frecuentes"
+    pregunta: "¿Qué os preguntan más por teléfono? Escribe cada pregunta y lo que respondéis."
+    ayuda: "Por ejemplo: cuánto cuesta la salida, si vais en fin de semana, cada cuánto se revisa la caldera, si compensa la aerotermia."
+    tipo: lista
+    campos: [secciones.preguntas.preguntas]
+  - id: fotos
+    titulo: "Tus fotos"
+    pregunta: "Pon una foto de portada y, si quieres, las de tus instalaciones y tus trabajos."
+    ayuda: "Sube las tuyas o elige una del banco. Quedan mejor las fotos de trabajos terminados y ordenados, con buena luz. Las que no cambies se quedan como están."
+    tipo: fotos
+    campos: [secciones.hero.imagen, secciones.averias.imagen, secciones.zonas.imagen]
+  - id: aspecto
+    titulo: "Colores y logo"
+    pregunta: "Elige los colores de tu web y, si tienes, tu logo."
+    tipo: eleccion
+    campos: [colores.primario, colores.acento, logo]
+  - id: repaso
+    titulo: "Repaso"
+    tipo: repaso

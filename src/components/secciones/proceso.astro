@@ -1,0 +1,53 @@
+---
+// Cómo trabajamos (Range de Cobalt: «una línea de tiempo como una regla»), en la única banda de grafito de la página:
+// una regla con marcas finas a todo el ancho y, sobre cada paso (`items: [{titulo, texto, icono}]`), una muesca, el
+// número en Familjen a tamaño de cifra, el título y su línea. Es una lista ordenada de verdad (<ol>). En móvil la regla
+// va en vertical a la izquierda. Sin pasos no se pinta.
+import { seccion, externo } from '../../data/site';
+import Seccion from '../ui/Seccion.astro';
+import Titular from '../ui/Titular.astro';
+interface Props { id: string }
+const { id } = Astro.props;
+const s = seccion(id);
+const pasos = s ? s.items : [];
+---
+
+{
+  s && pasos.length > 0 && (
+    <Seccion id={id} banda="grafito">
+      <Titular partida antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+      <ol class="regla" style={`--pasos:${Math.min(pasos.length, 5)}`}>
+        {pasos.map((p) => (
+          <li class="regla-paso">
+            <h3 class="regla-titulo">{p.titulo}</h3>
+            {p.texto && <p class="regla-texto">{p.texto}</p>}
+          </li>
+        ))}
+      </ol>
+      {s.cta && (
+        <p class="mt-12">
+          <a class="btn" href={s.cta.url} {...(externo(s.cta.url) && { rel: 'noopener', target: '_blank' })}>{s.cta.texto}</a>
+        </p>
+      )}
+    </Seccion>
+  )
+}
+
+<style>
+  .regla { --linea: color-mix(in oklab, var(--sobre-grafito) 34%, var(--grafito)); --marca: color-mix(in oklab, var(--sobre-grafito) 16%, var(--grafito));
+    position: relative; display: grid; gap: 2.5rem; counter-reset: paso; padding-left: 2.5rem; }
+  .regla::before { content: ""; position: absolute; left: .55rem; top: .4rem; bottom: .4rem; width: 10px;
+    background: repeating-linear-gradient(to bottom, var(--marca) 0 1px, transparent 1px 16px); border-left: 1px solid var(--linea); }
+  .regla-paso { position: relative; counter-increment: paso; min-width: 0; }
+  .regla-paso::before { content: counter(paso); display: block; font-family: var(--fuente-titulos); font-weight: 600; font-size: clamp(2.75rem, 2rem + 3vw, 4.5rem); line-height: .9; letter-spacing: -.04em; font-variant-numeric: tabular-nums;
+    color: color-mix(in oklab, var(--c-acento) 45%, var(--sobre-grafito)); }
+  .regla-paso::after { content: ""; position: absolute; left: -2.05rem; top: 1rem; width: 14px; height: 14px; background: var(--grafito); border: 1px solid var(--sobre-grafito); transform: rotate(45deg); }
+  .regla-titulo { margin-top: 1rem; font-size: clamp(1.3rem, 1.1rem + .6vw, 1.6rem); font-weight: 500; }
+  .regla-texto { margin-top: .5rem; max-width: 34ch; color: color-mix(in oklab, var(--sobre-grafito) 80%, var(--grafito)); }
+  @media (min-width: 60rem) {
+    .regla { grid-template-columns: repeat(var(--pasos), minmax(0, 1fr)); gap: 2rem; padding-left: 0; padding-top: 3.25rem; }
+    .regla::before { left: 0; right: 0; top: 0; bottom: auto; width: auto; height: 12px; border-left: 0; border-top: 1px solid var(--linea);
+      background: repeating-linear-gradient(to right, var(--marca) 0 1px, transparent 1px 16px); }
+    .regla-paso::after { left: 0; top: -3.25rem; width: 1px; height: 26px; background: var(--sobre-grafito); border: 0; transform: none; }
+  }
+</style>

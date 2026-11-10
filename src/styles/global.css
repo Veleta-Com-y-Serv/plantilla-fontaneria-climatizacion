@@ -1,0 +1,253 @@
+/* Hallmark · shape: Workbench de oficio (avería → instalación → mantenimiento) · genre: modern-minimal · theme: Cobalt (by request) · job: llamar ya + pedir presupuesto · draw: manual (plantilla NoExpertise)
+ * hero: Stage (texto sobre el campo de caracteres a la izquierda, foto a sangre a la derecha) · nav: edge-aligned fija con el teléfono y una tecla · footer: mast en papel 3 · imagery: photographs generadas para la plantilla, tinte frío · signature: el campo de caracteres del agua (turbulento a la izquierda, laminar al llegar a la foto) detrás de la portada
+ * axes: light/grotesk/cool · posture: restrained · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R3 V4 · weakest: R (11 apartados por contrato), alternando tabla con filetes, fotos grandes, regla de pasos en grafito, teclas y filas */
+/* waive 54/67: el campo `antetitulo` es contrato de NoExpertise; se pinta como etiqueta discreta en Familjen 500, en minúsculas normales y sin espaciado. */
+/* waive 46a: `opiniones` es una lista de ejemplo; la plataforma la deja desmarcada y vacía hasta que el cliente pone las suyas. */
+/* waive 48: los literales del bloque :root son respaldos de color-mix con blanco; los de comun.css (común a todas las plantillas) y el style de <html> con los cuatro colores del cliente son contrato de NoExpertise. */
+/* waive 20: el CSS se sirve en línea y Tailwind antepone su cabecera; el sello es la primera línea de este fichero fuente. */
+/* waive 83: el dueño de NoExpertise pide fotos grandes del oficio; Cobalt pide una sola foto. Van once, todas del sector, con el tinte frío del tema. */
+/*
+ * Fontanería y climatización (NoExpertise), tema Cobalt: papel casi blanco y frío, tinta azul grisácea y filetes de 1 px,
+ * Familjen Grotesk en titulares, IBM Plex Sans para leer y JetBrains Mono para los valores de máquina (plazos) y el
+ * campo de caracteres. Paneles con dos esquinas cortadas, botones como teclas con canto, una banda de grafito y una sola
+ * señal cobalto por debajo del 5 % de la pantalla. Todo sale de las cuatro variables de color de site.yaml:
+ *   --c-fondo = papel · --c-texto = tinta · --c-acento = cobalto (tecla principal, foco, enlaces, campo) · --c-primario = grafito (banda de los pasos).
+ * Los demás tonos se derivan con color-mix() u oklch(from …): la web sigue legible si el cliente cambia los colores.
+ */
+@import "tailwindcss";
+@import "./comun.css";
+@config "../../tailwind.config.mjs";
+/* La clase utilitaria .transition (que Tailwind saca de la palabra en el código) anima el anillo de foco: fuera. */
+@source not inline("transition");
+
+@font-face { font-family: "Familjen Grotesk"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fuentes/familjen-grotesk-500.woff2") format("woff2"); }
+@font-face { font-family: "Familjen Grotesk"; font-style: normal; font-weight: 600; font-display: swap; src: url("/fuentes/familjen-grotesk-600.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fuentes/ibm-plex-sans-400.woff2") format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fuentes/ibm-plex-sans-500.woff2") format("woff2"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fuentes/jetbrains-mono-400.woff2") format("woff2"); }
+
+:root {
+  --fuente-titulos: "Familjen Grotesk", ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --fuente-texto: "IBM Plex Sans", ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --fuente-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+  --ancho: 90rem; --ritmo: 4.5rem; --ritmo-md: 6rem; --ritmo-lg: 7.5rem;
+  --alto-cabecera: 4rem;
+  --radio: 8px; --radio-campo: 6px; --corte: 8px; --corte-l: 16px;
+  --dur-micro: 120ms; --dur-corta: 220ms; --salida: cubic-bezier(.2, .7, .2, 1);
+  --margen-lado: 1rem;
+
+  /* Papel y tinta (derivados: siguen funcionando con los colores del cliente) */
+  --papel: var(--c-fondo);
+  --papel-2: color-mix(in oklab, color-mix(in oklab, var(--c-fondo) 97%, var(--c-acento)) 97%, var(--c-texto));
+  --papel-3: color-mix(in oklab, color-mix(in oklab, var(--c-fondo) 96%, var(--c-acento)) 93%, var(--c-texto));
+  --tinta: var(--c-texto);
+  --tinta-2: color-mix(in oklab, var(--c-texto) 84%, var(--c-fondo));
+  --apagado: color-mix(in oklab, var(--c-texto) 70%, var(--c-fondo));
+  --filete: color-mix(in oklab, var(--c-texto) 11%, var(--c-fondo));
+  --filete-2: color-mix(in oklab, var(--c-texto) 20%, var(--c-fondo));
+  /* La señal cobalto */
+  --acento-legible: color-mix(in oklab, var(--c-acento) 85%, var(--c-texto));
+  --acento-lavado: color-mix(in oklab, var(--c-acento) 8%, var(--c-fondo));
+  --acento-borde: color-mix(in oklab, var(--c-acento) 70%, var(--c-texto));
+  --sobre-acento: #fff;
+  /* El grafito (color primario): banda de los pasos */
+  --grafito: var(--c-primario);
+  --sobre-grafito: color-mix(in oklab, var(--c-fondo) 85%, #fff);
+  /* Teclas */
+  --tecla-cara: color-mix(in oklab, var(--c-fondo) 45%, #fff);
+  --tecla-canto: color-mix(in oklab, var(--c-texto) 24%, var(--c-fondo));
+  --sombra-tecla: 0 3px 0 0 var(--tecla-canto), 0 6px 8px -4px color-mix(in oklab, var(--c-texto) 28%, transparent), inset 0 1px 0 color-mix(in oklab, #fff 90%, transparent);
+  --sombra-tecla-acento: 0 3px 0 0 var(--acento-borde), 0 6px 8px -4px color-mix(in oklab, var(--c-acento) 45%, transparent), inset 0 1px 0 color-mix(in oklab, #fff 22%, transparent);
+  --sombra-pulsada: inset 0 1px 2px color-mix(in oklab, var(--c-texto) 16%, transparent);
+  --sombra-panel: 0 1px 2px color-mix(in oklab, var(--c-texto) 6%, transparent);
+  /* Tintes del campo de caracteres (de casi papel a cobalto) */
+  --glifo-1: color-mix(in oklab, var(--c-acento) 12%, var(--c-fondo));
+  --glifo-2: color-mix(in oklab, var(--c-acento) 24%, var(--c-fondo));
+  --glifo-3: color-mix(in oklab, var(--c-acento) 44%, var(--c-fondo));
+  --glifo-4: color-mix(in oklab, var(--c-acento) 68%, var(--c-fondo));
+}
+@supports (color: oklch(from red l c h)) {
+  :root {
+    --acento-legible: oklch(from var(--c-acento) min(l, 0.5) c h);
+    --sobre-acento: oklch(from var(--c-acento) clamp(0.2, calc((0.66 - l) * 1000), 0.985) min(c, 0.02) h);
+    --sobre-grafito: oklch(from var(--c-primario) clamp(0.21, calc((0.63 - l) * 1000), 0.94) min(c, 0.012) h);
+  }
+}
+@media (min-width: 40rem) { :root { --margen-lado: 1.5rem; } }
+@media (min-width: 60rem) { :root { --alto-cabecera: 4.5rem; --margen-lado: max(4rem, calc((100% - var(--ancho)) / 2 + 4rem)); } }
+
+@layer base {
+  html { overflow-x: clip; scroll-padding-top: calc(var(--alto-cabecera) + 1rem); }
+  body { font-family: var(--fuente-texto); font-size: 1.0625rem; line-height: 1.6; color: var(--tinta-2); background: var(--papel); font-synthesis: none; }
+  h1, h2, h3 {
+    font-family: var(--fuente-titulos); font-weight: 600; line-height: 1.04; letter-spacing: -0.026em; color: var(--tinta);
+    overflow-wrap: normal; word-break: normal; hyphens: manual; min-width: 0; text-wrap: balance; font-variant-numeric: tabular-nums;
+  }
+  h3 { font-weight: 500; letter-spacing: -0.012em; line-height: 1.15; }
+  a { text-decoration-color: var(--filete-2); text-underline-offset: .2em; text-decoration-thickness: 1px; }
+  a:hover { text-decoration-color: var(--c-acento); }
+  ::selection { background: var(--glifo-2); color: var(--tinta); }
+  :focus-visible { outline: 2px solid var(--acento-legible); outline-offset: 3px; }
+  .banda--grafito :focus-visible { outline-color: currentColor; }
+  main { padding-top: var(--alto-cabecera); }
+  img { display: block; }
+}
+
+@layer components {
+  .contenedor { max-width: var(--ancho); padding-inline: 1rem; }
+  @media (min-width: 40rem) { .contenedor { padding-inline: 1.5rem; } }
+  @media (min-width: 60rem) { .contenedor { padding-inline: 4rem; } }
+
+  /* ------------------------------------------------------------------ Bandas a todo el ancho */
+  .banda { position: relative; padding-block: var(--ritmo); background: var(--banda, var(--papel)); color: var(--tinta-2); }
+  @media (min-width: 40rem) { .banda { padding-block: var(--ritmo-md); } }
+  @media (min-width: 60rem) { .banda { padding-block: var(--ritmo-lg); } }
+  .banda--papel { --banda: var(--papel); }
+  .banda--clara { --banda: var(--papel-2); border-block: 1px solid var(--filete); }
+  .banda--grafito { --banda: var(--grafito); color: color-mix(in oklab, var(--sobre-grafito) 86%, var(--grafito)); }
+  .banda--grafito h2, .banda--grafito h3 { color: var(--sobre-grafito); }
+
+  /* Etiqueta discreta (antetítulo, pies, cabeceras de tabla): Familjen 500, un paso menor, apagada */
+  .etiqueta, .antetitulo { font-family: var(--fuente-titulos); font-weight: 500; font-size: .9375rem; line-height: 1.35; letter-spacing: 0; color: var(--apagado); }
+  .banda--grafito .etiqueta, .banda--grafito .antetitulo { color: color-mix(in oklab, var(--sobre-grafito) 72%, var(--grafito)); }
+  .mono { font-family: var(--fuente-mono); font-size: .92em; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+
+  /* ------------------------------------------------------------------ Titulares (20 letras caben a 375 px) */
+  .titulo-seccion { font-size: clamp(1.875rem, 1.15rem + 3.1vw, 3.25rem); max-width: 22ch; }
+  .entrada { font-size: clamp(1.08rem, 1rem + .35vw, 1.3rem); line-height: 1.5; color: var(--tinta-2); max-width: 44ch; }
+  .banda--grafito .entrada { color: color-mix(in oklab, var(--sobre-grafito) 84%, var(--grafito)); }
+  .titular .antetitulo + .titulo-seccion { margin-top: .75rem; }
+  .titular .titulo-seccion + .entrada, .titular .antetitulo + .entrada { margin-top: 1rem; }
+  /* Cabeza de sección partida: título a la izquierda, la línea a la derecha, filete de 1 px encima */
+  .cabeza { display: grid; gap: 1rem; padding-top: 1.25rem; border-top: 1px solid var(--filete-2); margin-bottom: 2.5rem; }
+  .banda--grafito .cabeza { border-top-color: color-mix(in oklab, var(--sobre-grafito) 22%, var(--grafito)); }
+  @media (min-width: 60rem) {
+    .cabeza { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; column-gap: 2rem; margin-bottom: 3.5rem; padding-top: 1.5rem; }
+    .cabeza > .antetitulo { grid-column: 1 / -1; }
+    .cabeza > .entrada { margin-top: 0; justify-self: end; }
+  }
+
+  /* ------------------------------------------------------------------ Teclas: cobalto la principal, cara de papel la otra */
+  .btn, .btn-sec {
+    min-height: 3rem; padding: .7rem 1.35rem; max-width: 100%; border-radius: var(--radio-campo); white-space: nowrap;
+    font-family: var(--fuente-titulos); font-weight: 500; font-size: 1.02rem; letter-spacing: 0; line-height: 1;
+    transition: transform var(--dur-micro) var(--salida), box-shadow var(--dur-micro) var(--salida), background-color var(--dur-micro) var(--salida);
+  }
+  .btn { background: var(--c-acento); color: var(--sobre-acento); border: 1px solid var(--acento-borde); box-shadow: var(--sombra-tecla-acento); }
+  .btn-sec { background: var(--tecla-cara); color: var(--tinta); border: 1px solid var(--filete-2); box-shadow: var(--sombra-tecla); }
+  @media (hover: hover) { .btn:hover, .btn-sec:hover { transform: translateY(-1px); } }
+  .btn:active, .btn-sec:active { transform: translateY(3px); box-shadow: var(--sombra-pulsada); }
+  .btn:disabled, .btn-sec:disabled, .campo input:disabled, .campo textarea:disabled, .campo select:disabled { opacity: .55; cursor: not-allowed; }
+  .btn svg, .btn-sec svg { flex-shrink: 0; }
+  .botones { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 2rem; }
+  /* Enlace de texto con subrayado cobalto al pasar */
+  .enlace { display: inline-flex; align-items: center; gap: .45rem; min-height: 2.75rem; font-family: var(--fuente-titulos); font-weight: 500; color: var(--tinta); text-decoration: underline; text-decoration-color: var(--filete-2); text-underline-offset: .3em; }
+  .enlace:hover { text-decoration-color: var(--c-acento); }
+  .banda--grafito .enlace { color: var(--sobre-grafito); text-decoration-color: color-mix(in oklab, var(--sobre-grafito) 35%, var(--grafito)); }
+
+  /* ------------------------------------------------------------------ Panel cortado en dos esquinas opuestas */
+  .corte { position: relative; background: var(--papel); border: 1px solid var(--filete); border-radius: var(--radio); box-shadow: var(--sombra-panel); }
+  @supports (corner-shape: bevel) { .corte { border-radius: var(--corte-l) 4px var(--corte-l) 4px; corner-shape: bevel round bevel round; } }
+  .corte--hundido { background: var(--papel-3); box-shadow: none; }
+
+  /* Estado: texto con un icono, nunca una píldora rellena */
+  .estado { display: inline-flex; align-items: center; gap: .5rem; font-family: var(--fuente-titulos); font-weight: 500; color: var(--tinta); }
+  .estado svg { color: var(--acento-legible); flex-shrink: 0; }
+
+  /* Foto con el tratamiento del tema: algo desaturada y con un tinte frío; filete de tinta al 8 % */
+  .foto { position: relative; overflow: hidden; background: var(--papel-3); }
+  .foto > img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.72) contrast(1.04) brightness(1.01); }
+  .foto::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: color-mix(in oklab, var(--c-acento) 45%, var(--c-primario)); mix-blend-mode: color; opacity: .14; }
+  .foto::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--tinta) 8%, transparent); }
+
+  /* Tabla con filetes a todo el ancho */
+  .tabla { width: 100%; border-collapse: collapse; }
+  .tabla th { text-align: left; font-family: var(--fuente-titulos); font-weight: 500; font-size: .9375rem; color: var(--apagado); padding: 0 1rem .75rem 0; border-bottom: 1px solid var(--filete-2); white-space: nowrap; }
+  .tabla td { padding: 1.1rem 1rem 1.1rem 0; border-bottom: 1px solid var(--filete); vertical-align: top; }
+
+  /* ------------------------------------------------------------------ Formulario (marcado de FormularioContacto.astro) */
+  .formulario { gap: 1.1rem; }
+  .campo label { font-family: var(--fuente-titulos); font-weight: 500; font-size: .95rem; color: var(--tinta); }
+  .campo input, .campo textarea, .campo select {
+    width: 100%; min-height: 3rem; font: inherit; font-size: 1rem; color: var(--tinta); background: var(--tecla-cara);
+    padding: .7rem .85rem; border: 1px solid color-mix(in oklab, var(--c-texto) 42%, var(--c-fondo)); border-radius: var(--radio-campo);
+  }
+  .campo input:focus-visible, .campo textarea:focus-visible, .campo select:focus-visible { outline: 2px solid var(--acento-legible); outline-offset: -1px; }
+  .campo-doble { display: grid; gap: 1.1rem; }
+  @media (min-width: 40rem) { .campo-doble { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .campo-check { color: var(--tinta-2); }
+  .campo-check input { accent-color: var(--c-acento); width: 1.1rem; height: 1.1rem; flex-shrink: 0; }
+  .formulario-aviso { font-size: .875rem; opacity: 1; color: var(--apagado); }
+
+  /* ------------------------------------------------------------------ Cabecera fija, siempre sólida (z-index 50, por encima de la portada) */
+  .cabecera--cobalto { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: var(--papel); color: var(--tinta); border-bottom: 1px solid var(--filete); }
+  .cabecera--cobalto.con-sombra { box-shadow: 0 6px 16px -12px color-mix(in oklab, var(--c-texto) 45%, transparent); }
+  .cabecera--cobalto .cabecera-fila { min-height: var(--alto-cabecera); gap: .75rem; }
+  .cabecera--cobalto .marca-nombre { font-family: var(--fuente-titulos); font-weight: 600; font-size: 1.2rem; letter-spacing: -.02em; line-height: 1.1; }
+  @media (min-width: 60rem) { .cabecera--cobalto .marca-nombre { font-size: 1.35rem; } }
+  .cabecera--cobalto .cabecera-nav { display: none; gap: .1rem; }
+  .cabecera--cobalto .cabecera-nav a { font-family: var(--fuente-titulos); font-weight: 500; font-size: .98rem; padding: .55rem .65rem; white-space: nowrap; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: .4em; transition: text-decoration-color var(--dur-corta) var(--salida); }
+  .cabecera--cobalto .cabecera-nav a:hover { text-decoration-color: var(--c-acento); }
+  .cabecera-telefono { display: none; align-items: center; gap: .4rem; font-family: var(--fuente-titulos); font-weight: 600; font-size: 1.05rem; color: var(--tinta); text-decoration: none; white-space: nowrap; font-variant-numeric: tabular-nums; min-height: 2.75rem; }
+  .cabecera-telefono:hover { text-decoration: underline; text-decoration-color: var(--c-acento); }
+  .cabecera-telefono svg { color: var(--acento-legible); }
+  .cabecera--cobalto .cabecera-cta { display: none; min-height: 2.75rem; padding: .55rem 1.1rem; font-size: .98rem; }
+  .cabecera-llamar { display: inline-flex; min-height: 2.75rem; padding: .5rem .8rem; font-size: .95rem; }
+  .cabecera--cobalto .menu-movil summary { min-height: 2.75rem; padding: .45rem .8rem; border: 1px solid var(--filete-2); border-radius: var(--radio-campo); background: var(--tecla-cara); font-family: var(--fuente-titulos); font-weight: 500; font-size: .95rem; }
+  .cabecera--cobalto .menu-movil-panel { padding: .25rem 1rem 1.5rem; background: var(--papel); color: var(--tinta); border-top: 1px solid var(--filete); border-bottom: 1px solid var(--filete-2); box-shadow: 0 16px 24px -16px color-mix(in oklab, var(--c-texto) 35%, transparent); }
+  .cabecera--cobalto .menu-movil-panel a { font-family: var(--fuente-titulos); font-weight: 500; font-size: 1.35rem; min-height: 3rem; display: flex; align-items: center; border-bottom-color: var(--filete); }
+  .cabecera--cobalto .menu-movil-panel .btn { font-size: 1.02rem; margin-top: 1rem; justify-content: center; }
+  @media (min-width: 40rem) { .cabecera-telefono { display: inline-flex; } .cabecera-llamar { display: none; } }
+  @media (max-width: 63.99rem) { .cabecera--cobalto .menu-movil { display: block; } }
+  @media (min-width: 64rem) {
+    .cabecera--cobalto .cabecera-nav { display: flex; }
+    .cabecera--cobalto .cabecera-cta { display: inline-flex; }
+    .cabecera--cobalto .menu-movil { display: none; }
+  }
+  @media (min-width: 64rem) and (max-width: 81.99rem) { .cabecera--cobalto .cabecera-nav a { padding-inline: .45rem; font-size: .93rem; } .cabecera-telefono { display: none; } }
+
+  /* ------------------------------------------------------------------ Pie: mástil en papel 3 */
+  .pie--cobalto { padding-top: var(--ritmo-md); background: var(--papel-3); color: var(--tinta-2); border-top: 1px solid var(--filete-2); }
+  .pie-gigante { font-family: var(--fuente-titulos); font-weight: 600; font-size: clamp(2.1rem, 1rem + 5vw, 5.75rem); line-height: .98; letter-spacing: -.035em; color: var(--tinta); overflow-wrap: normal; hyphens: manual; max-width: 18ch; text-wrap: balance; }
+  .pie-telefono { display: inline-block; margin-top: 1.25rem; font-family: var(--fuente-titulos); font-weight: 600; font-size: clamp(1.6rem, 1.1rem + 2vw, 2.6rem); letter-spacing: -.02em; color: var(--acento-legible); text-decoration: none; font-variant-numeric: tabular-nums; }
+  .pie-telefono:hover { text-decoration: underline; }
+  .pie--cobalto .pie-eslogan { margin-top: 1rem; max-width: 52ch; font-size: 1.06rem; opacity: 1; color: var(--tinta-2); }
+  .pie-columnas { display: grid; gap: 2rem; margin-top: 3rem; padding-block: 2.25rem; border-top: 1px solid var(--filete-2); }
+  @media (min-width: 40rem) { .pie-columnas { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 60rem) { .pie-columnas { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .pie--cobalto .pie-titulo { font-family: var(--fuente-titulos); font-weight: 500; font-size: .9375rem; text-transform: none; letter-spacing: 0; opacity: 1; color: var(--apagado); margin-bottom: .6rem; }
+  .pie-dato { font-size: 1rem; line-height: 1.5; }
+  .pie-dato a, .pie--cobalto .pie-lista a { text-decoration: none; }
+  .pie-dato a:hover, .pie--cobalto .pie-lista a:hover { text-decoration: underline; text-decoration-color: var(--c-acento); }
+  .pie--cobalto .pie-lista a { display: inline-block; padding-block: .3rem; }
+  .pie--cobalto .pie-redes a { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; padding: 0; border: 1px solid var(--filete-2); border-radius: var(--radio-campo); background: var(--tecla-cara); }
+  .pie--cobalto .pie-legal { margin-top: 0; padding-block: 1.25rem 1.5rem; border-top: 1px solid var(--filete-2); opacity: 1; color: var(--apagado); font-size: .9rem; }
+
+  /* Barra fija de móvil: llamar y WhatsApp siempre a mano */
+  .barra-movil { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: .6rem; padding: .6rem 1rem calc(.6rem + env(safe-area-inset-bottom)); background: var(--papel); border-top: 1px solid var(--filete-2); }
+  .barra-movil .btn, .barra-movil .btn-sec { width: 100%; padding-inline: .75rem; }
+  @media (max-width: 59.99rem) { body:has(.barra-movil) { padding-bottom: 4.6rem; } }
+  @media (min-width: 60rem) { .barra-movil { display: none; } }
+
+  /* Textos largos (fichas, zonas, aviso legal) */
+  .texto-largo { color: var(--tinta-2); }
+  .texto-largo h2 { font-size: 1.35rem; font-weight: 600; margin-top: 2.25rem; }
+  .texto-largo p { line-height: 1.7; }
+
+  /* Migas de pan */
+  .migas ol { display: flex; flex-wrap: wrap; gap: .1rem .6rem; font-family: var(--fuente-titulos); font-weight: 500; font-size: .9375rem; color: var(--apagado); }
+  .migas li { display: inline-flex; align-items: center; gap: .6rem; min-width: 0; }
+  .migas li + li::before { content: "/"; color: var(--filete-2); }
+  .migas a { min-height: 2.75rem; display: inline-flex; align-items: center; color: var(--tinta-2); }
+  .migas [aria-current] { overflow-wrap: anywhere; }
+
+  /* Lista de datos (fichas): filas con filete, la etiqueta apagada */
+  .datos > div { display: flex; justify-content: space-between; gap: 1rem; padding: .8rem 0; border-top: 1px solid var(--filete); }
+  .datos dt { font-family: var(--fuente-titulos); font-weight: 500; color: var(--apagado); }
+  .datos dd { text-align: right; font-weight: 500; color: var(--tinta); min-width: 0; overflow-wrap: anywhere; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn:hover, .btn-sec:hover { transform: none; }
+}

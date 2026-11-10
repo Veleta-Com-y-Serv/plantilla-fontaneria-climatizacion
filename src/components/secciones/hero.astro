@@ -1,0 +1,189 @@
+---
+// Portada «Stage» del tema Cobalt. A la izquierda, sobre el campo de caracteres del agua (canvas, un script pequeño en
+// línea: turbulento a la izquierda, laminar al llegar a la foto; sin script, una rejilla de puntos), la etiqueta
+// (`antetitulo`), el titular, una frase, la tecla de llamar (`cta`; sin ella, el teléfono) y la segunda (`cta_secundario`;
+// sin ella, WhatsApp o el presupuesto), el `destacado` como panel cortado con un icono de estado y los `items` como datos
+// cortos con filetes. A la derecha, la foto (`imagen`) a sangre hasta el borde y de toda la altura; en móvil va debajo
+// del texto. Sin `imagen`, la portada es solo texto sobre el campo.
+import { seccion, site, tel, whatsapp, externo } from '../../data/site';
+import { enlace } from '../../lib/multipagina';
+import { altHero } from '../../lib/seo';
+import Imagen from '../ui/Imagen.astro';
+import Icono from '../ui/Icono.astro';
+interface Props { id: string; primera?: boolean }
+const { id, primera = false } = Astro.props;
+const s = seccion(id);
+const c = site.contacto;
+const principal = s?.cta?.url ? s.cta : c.telefono ? { texto: `Llamar al ${c.telefono}`, url: tel(c.telefono) } : null;
+const secundario = s?.cta_secundario?.url
+  ? s.cta_secundario
+  : c.whatsapp
+    ? { texto: 'Escribir por WhatsApp', url: whatsapp(c.whatsapp, `Hola, os escribo desde la web de ${site.nombre}`) }
+    : seccion('presupuesto')
+      ? { texto: 'Pedir presupuesto', url: enlace('/#presupuesto') }
+      : null;
+const esTel = (u?: string) => Boolean(u && u.startsWith('tel:'));
+const esWa = (u?: string) => Boolean(u && /wa\.me|whatsapp/.test(u));
+const datos = (s?.items ?? []).map((it) => String(it?.titulo ?? '').trim()).filter(Boolean);
+---
+
+{
+  s && (
+    <section id={id} class:list={['portada', { 'portada--con-foto': s.imagen }]}>
+      <div class="portada-texto" data-campo-zona>
+        <canvas class="portada-campo" aria-hidden="true" data-campo />
+        <div class="portada-contenido" data-campo-hueco>
+          {s.antetitulo && <p class="antetitulo">{s.antetitulo}</p>}
+          <h1 class="portada-titulo">{s.titulo || site.nombre}</h1>
+          {s.texto && <p class="portada-parrafo">{s.texto}</p>}
+          {(principal || secundario) && (
+            <div class="botones">
+              {principal && (
+                <a class="btn" href={principal.url} {...(externo(principal.url) && { rel: 'noopener', target: '_blank' })}>
+                  {esTel(principal.url) && <Icono nombre="telefono" tam={18} />}
+                  {principal.texto}
+                </a>
+              )}
+              {secundario && (
+                <a class="btn-sec" href={secundario.url} {...(externo(secundario.url) && { rel: 'noopener', target: '_blank' })}>
+                  {esWa(secundario.url) && <Icono nombre="whatsapp" tam={18} />}
+                  {esTel(secundario.url) && <Icono nombre="telefono" tam={18} />}
+                  {secundario.texto}
+                </a>
+              )}
+            </div>
+          )}
+          {s.destacado && (
+            <div class="portada-destacado corte">
+              <Icono nombre="reloj" tam={22} />
+              <div>
+                {s.destacado.titulo && <p class="portada-destacado-titulo">{s.destacado.titulo}</p>}
+                {s.destacado.texto && <p class="portada-destacado-texto">{s.destacado.texto}</p>}
+              </div>
+            </div>
+          )}
+          {datos.length > 0 && (
+            <ul class="portada-datos">
+              {datos.map((d) => <li><Icono nombre="check" tam={16} />{d}</li>)}
+            </ul>
+          )}
+        </div>
+      </div>
+      {s.imagen && (
+        <div class="portada-foto foto">
+          <Imagen src={s.imagen} alt={altHero()} ancho={1536} alto={864} prioridad={primera} />
+        </div>
+      )}
+    </section>
+  )
+}
+
+<script is:inline>
+  // Campo de caracteres del agua (tema Cobalt): celdas de 8 x 16 px con una rampa ASCII teñida del acento. El agua entra
+  // revuelta por la izquierda y llega en calma (guiones) a la foto. Se para fuera de pantalla; con «reducir movimiento»
+  // es una imagen fija. Nunca pinta denso debajo del texto. Sin script queda la rejilla de puntos del CSS.
+  (function () {
+    var lienzo = document.querySelector('[data-campo]');
+    if (!lienzo || !lienzo.getContext) return;
+    var zona = lienzo.closest('[data-campo-zona]');
+    var hueco = zona.querySelector('[data-campo-hueco]');
+    var ctx = lienzo.getContext('2d');
+    var CW = 8, CH = 16, RAMPA = ' .:-=+*#%@', CALMA = ' .-=';
+    var quieto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var cols = 0, filas = 0, t = 0, activo = false, ultimo = 0, color = '#1d5fd6', caja = null;
+    function h(x, y) { var n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return n - Math.floor(n); }
+    function ruido(x, y) {
+      var xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+      var u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+      var a = h(xi, yi), b = h(xi + 1, yi), c = h(xi, yi + 1), d = h(xi + 1, yi + 1);
+      return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+    }
+    function medir() {
+      var r = zona.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+      lienzo.width = Math.round(r.width * dpr); lienzo.height = Math.round(r.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.font = '12px "JetBrains Mono", ui-monospace, monospace'; ctx.textBaseline = 'top';
+      cols = Math.ceil(r.width / CW); filas = Math.ceil(r.height / CH);
+      var hr = hueco.getBoundingClientRect();
+      caja = { x0: (hr.left - r.left) / CW - 2, x1: (hr.right - r.left) / CW + 2, y0: (hr.top - r.top) / CH - 1, y1: (hr.bottom - r.top) / CH + 1 };
+      var prueba = document.createElement('span'); prueba.style.color = 'var(--c-acento)'; zona.appendChild(prueba);
+      color = getComputedStyle(prueba).color || color; prueba.remove();
+    }
+    function pintar() {
+      ctx.clearRect(0, 0, cols * CW, filas * CH);
+      ctx.fillStyle = color;
+      var tubos = [0.1, 0.92];
+      for (var nivel = 1; nivel <= 4; nivel++) {
+        ctx.globalAlpha = [0, 0.16, 0.3, 0.5, 0.78][nivel];
+        for (var f = 0; f < filas; f++) {
+          for (var k = 0; k < cols; k++) {
+            var px = k / cols, g = 0;
+            for (var i = 0; i < tubos.length; i++) { var dd = (f / filas - tubos[i]) / 0.08; g = Math.max(g, Math.exp(-dd * dd)); }
+            var revuelto = 1 - px * 0.75;
+            var n = ruido(k * 0.11 - t * 1.4, f * (0.18 + revuelto * 0.5) + t * 0.2 * revuelto);
+            var dens = g * (0.25 + 0.85 * n * (0.55 + revuelto * 0.6)) + 0.12 * ruido(k * 0.35 + 40, f * 0.5);
+            if (caja && k >= caja.x0 && k <= caja.x1 && f >= caja.y0 && f <= caja.y1) dens *= 0.1;
+            var l = Math.min(4, Math.floor(dens * 4.4));
+            if (l !== nivel) continue;
+            var rampa = px > 0.62 ? CALMA : RAMPA;
+            var ch = rampa.charAt(Math.min(rampa.length - 1, Math.max(1, Math.floor(dens * (rampa.length - 0.01)))));
+            ctx.fillText(ch, k * CW, f * CH);
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+    function bucle(ms) {
+      if (!activo) return;
+      if (ms - ultimo > 33) { ultimo = ms; t += 0.033; pintar(); }
+      requestAnimationFrame(bucle);
+    }
+    function empezar() {
+      medir(); zona.classList.add('campo-vivo'); pintar();
+      if (quieto) return;
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (e) {
+          var ver = e[0].isIntersecting;
+          if (ver && !activo) { activo = true; requestAnimationFrame(bucle); } else if (!ver) activo = false;
+        }).observe(zona);
+      }
+    }
+    var listo = document.fonts && document.fonts.load ? document.fonts.load('12px "JetBrains Mono"') : Promise.resolve();
+    listo.then(empezar, empezar);
+    var espera;
+    window.addEventListener('resize', function () { clearTimeout(espera); espera = setTimeout(function () { medir(); pintar(); }, 150); });
+  })();
+</script>
+
+<style>
+  .portada { position: relative; display: grid; background: var(--papel); border-bottom: 1px solid var(--filete); }
+  .portada-texto { position: relative; isolation: isolate; display: flex; align-items: center; padding: 3rem var(--margen-lado) 3.5rem;
+    background-image: radial-gradient(circle, var(--glifo-2) 1px, transparent 1.3px); background-size: 8px 16px; }
+  .portada-texto.campo-vivo { background-image: none; }
+  .portada-campo { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
+  .portada-contenido { container-type: inline-size; width: 100%; max-width: 40rem; }
+  .portada-titulo {
+    margin-top: .9rem; font-size: min(clamp(2.15rem, 1.1rem + 4.6vw, 5rem), calc(100cqi / 10.4));
+    line-height: 1.0; letter-spacing: -0.03em; max-width: 100%;
+  }
+  .portada-parrafo { margin-top: 1.25rem; font-size: clamp(1.1rem, 1rem + .4vw, 1.3rem); line-height: 1.5; color: var(--tinta-2); max-width: 36ch; }
+  .portada-destacado { display: flex; gap: .85rem; align-items: flex-start; margin-top: 2rem; padding: 1rem 1.15rem; max-width: 30rem; }
+  .portada-destacado :global(svg) { color: var(--acento-legible); flex-shrink: 0; margin-top: .1rem; }
+  .portada-destacado-titulo { font-family: var(--fuente-titulos); font-weight: 600; font-size: 1.1rem; color: var(--tinta); line-height: 1.25; }
+  .portada-destacado-texto { margin-top: .2rem; color: var(--tinta-2); font-size: 1rem; }
+  .portada-datos { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin-top: 1.75rem; font-family: var(--fuente-titulos); font-weight: 500; font-size: .9375rem; color: var(--apagado); }
+  .portada-datos li { display: inline-flex; align-items: center; gap: .4rem; }
+  .portada-datos :global(svg) { color: var(--acento-legible); }
+  .portada-foto { aspect-ratio: 1 / 1; max-height: 34rem; width: 100%; border-top: 1px solid var(--filete); }
+  .portada-foto :global(img) { object-position: 100% 45%; }
+  @media (min-width: 40rem) { .portada-foto { aspect-ratio: 16 / 9; max-height: none; } }
+  @media (min-width: 60rem) {
+    .portada--con-foto { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: min(calc(100svh - var(--alto-cabecera)), 58rem); }
+    .portada-texto { padding: 4rem 4rem 4rem max(4rem, calc(100% - 41rem)); }
+    .portada:not(.portada--con-foto) .portada-texto { padding-left: var(--margen-lado); }
+    .portada:not(.portada--con-foto) .portada-texto { min-height: calc(76svh - var(--alto-cabecera)); }
+    .portada-foto { aspect-ratio: auto; height: 100%; border-top: 0; border-left: 1px solid var(--filete); }
+    .portada-foto :global(img) { object-position: 88% 40%; }
+    .portada-destacado { margin-top: 2.5rem; }
+  }
+</style>

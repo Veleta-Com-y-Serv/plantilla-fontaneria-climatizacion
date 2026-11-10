@@ -1,0 +1,57 @@
+[
+  {
+    "fichero": "fotos/hero.jpg",
+    "aspecto": "16:9",
+    "prompt": "Fotografía horizontal panorámica 16:9 de un instalador de calefacción visto de espaldas y de medio cuerpo, sin cara visible, apretando con una llave inglesa una conexión de cobre bajo una caldera mural de condensación blanca en el lavadero luminoso de una vivienda; tuberías de cobre nuevas y brillantes bien alineadas, luz natural fría de ventana lateral, paredes blancas, enfoque nítido en las manos y las tuberías, fondo limpio; el sujeto ocupa el centro de la imagen para poder recortarla en vertical; sin texto legible, sin logotipos, sin marcas."
+  },
+  {
+    "fichero": "fotos/averias.jpg",
+    "aspecto": "3:4",
+    "prompt": "Fotografía vertical 3:4 de primer plano de unas manos con guantes de trabajo grises cerrando una llave de paso cromada bajo un fregadero de cocina, gotas de agua en el sifón y en la tubería, mueble bajo abierto, linterna frontal iluminando la escena con luz blanca y fría, encuadre cerrado, profundidad de campo corta; sin caras, sin texto legible, sin logotipos."
+  },
+  {
+    "fichero": "fotos/caldera.jpg",
+    "aspecto": "4:3",
+    "prompt": "Fotografía horizontal 4:3 de una caldera de gas de condensación blanca y moderna recién instalada en la pared de una galería de cocina, con su grupo de tuberías de cobre y llaves de corte ordenadas debajo, manómetro redondo sin cifras legibles, azulejo blanco mate, luz natural suave de mañana; encuadre frontal ligeramente en ángulo, limpio y ordenado; sin personas, sin texto legible, sin logotipos ni marcas visibles."
+  },
+  {
+    "fichero": "fotos/aerotermia.jpg",
+    "aspecto": "4:3",
+    "prompt": "Fotografía horizontal 4:3 de una unidad exterior de aerotermia blanca con su ventilador de rejilla, instalada sobre soportes en el suelo junto a la fachada de piedra clara de una casa unifamiliar en un pueblo de Aragón, tubería aislada negra que entra en el muro, cielo despejado de invierno, luz fría de mediodía, césped corto y grava; sin personas, sin texto legible, sin logotipos ni marcas."
+  },
+  {
+    "fichero": "fotos/aire-acondicionado.jpg",
+    "aspecto": "4:3",
+    "prompt": "Fotografía horizontal 4:3 de un aparato split de aire acondicionado blanco montado en lo alto de la pared de un salón moderno y luminoso, paredes blanco roto, sofá gris claro desenfocado en primer término, cortina de lino con luz de verano filtrada, ambiente fresco y limpio; sin personas, sin texto legible, sin pantallas con cifras, sin logotipos ni marcas."
+  },
+  {
+    "fichero": "fotos/suelo-radiante.jpg",
+    "aspecto": "4:3",
+    "prompt": "Fotografía horizontal 4:3 tomada desde arriba en diagonal de los tubos de suelo radiante de color naranja colocados en espiral sobre placas aislantes grises con tetones, en una habitación en obra antes de echar el mortero, colector de latón con sus llaves junto a la pared, luz natural fría entrando por una ventana sin carpintería; sin personas, sin texto legible, sin logotipos."
+  },
+  {
+    "fichero": "fotos/trabajo-bano.jpg",
+    "aspecto": "4:3",
+    "prompt": "Fotografía horizontal 4:3 de un baño recién reformado: plato de ducha extraplano blanco, mampara de vidrio transparente, grifería termostática negra mate, azulejo grande gris piedra, lavabo suspendido de madera clara, luz natural suave y fría, todo limpio y sin objetos personales; encuadre de arquitectura interior; sin personas, sin texto legible, sin logotipos."
+  },
+  {
+    "fichero": "fotos/trabajo-sala-calderas.jpg",
+    "aspecto": "4:3",
+    "prompt": "Fotografía horizontal 4:3 de la sala de calderas de una comunidad de vecinos recién renovada: dos calderas industriales blancas, tuberías gruesas aisladas con coquilla gris y acabado de aluminio, bombas circuladoras, válvulas rojas y manómetros sin cifras legibles, suelo de hormigón pintado gris claro, luz fluorescente fría y uniforme, todo ordenado; sin personas, sin texto legible, sin carteles, sin logotipos."
+  },
+  {
+    "fichero": "fotos/trabajo-termo.jpg",
+    "aspecto": "4:3",
+    "prompt": "Fotografía horizontal 4:3 de un termo eléctrico blanco cilíndrico recién instalado en vertical en la pared de un lavadero, con su válvula de seguridad, latiguillos flexibles nuevos y tubería multicapa blanca hasta las llaves de corte, azulejo blanco, lavadora desenfocada al lado, luz natural fría; sin personas, sin texto legible, sin etiquetas ni logotipos."
+  },
+  {
+    "fichero": "fotos/trabajo-tuberias.jpg",
+    "aspecto": "4:3",
+    "prompt": "Fotografía horizontal 4:3 de una pared de ladrillo abierta durante la reforma de una cocina con la nueva instalación de agua a la vista: tuberías multicapa blanca y roja paralelas, codos y llaves de paso nuevas, fijadas con abrazaderas, polvo de obra ligero, luz lateral fría de ventana; detalle limpio y técnico; sin personas, sin texto legible, sin logotipos."
+  },
+  {
+    "fichero": "fotos/furgoneta.jpg",
+    "aspecto": "16:9",
+    "prompt": "Fotografía horizontal panorámica 16:9 de una furgoneta de trabajo blanca sin rótulos ni matrícula visible, con las puertas traseras abiertas mostrando estanterías ordenadas con cajas de herramientas, rollos de tubería y piezas de fontanería, aparcada en una calle tranquila de una ciudad aragonesa con edificios de ladrillo, primera hora de la mañana, luz fría y limpia; sin personas, sin texto legible, sin logotipos ni marcas."
+  }
+]

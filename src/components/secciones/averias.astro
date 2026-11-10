@@ -1,0 +1,99 @@
+---
+// Averías y urgencias (Range de Cobalt: «una tabla que es la API»): tabla con filetes a todo el ancho, una fila por avería
+// (`averias: [{titulo, texto, plazo, icono}]`), el plazo en letra de máquina y la primera fila sobre el lavado cobalto.
+// Las averías con `detalle` tienen página propia en /averias/<slug>/ (src/lib/paginas.ts) y su nombre enlaza a ella.
+// A la derecha, la foto vertical (`imagen`); debajo, la tecla de llamar (`cta`; sin ella, el teléfono de contacto).
+// En móvil cada fila se apila como un bloque. Sin averías se queda la cabeza, la foto y el botón.
+import { seccion, conContenido, site, tel, externo } from '../../data/site';
+import { altSeccion } from '../../lib/seo';
+import { enlaceDe } from '../../lib/paginas';
+import Seccion from '../ui/Seccion.astro';
+import Titular from '../ui/Titular.astro';
+import Imagen from '../ui/Imagen.astro';
+import Icono from '../ui/Icono.astro';
+interface Props { id: string }
+const { id } = Astro.props;
+const s = seccion(id);
+const averias = s ? s.averias : [];
+const conPlazo = averias.some((a) => String(a.plazo ?? '').trim());
+const llamar = s?.cta ?? (site.contacto.telefono ? { texto: `Llamar al ${site.contacto.telefono}`, url: tel(site.contacto.telefono) } : null);
+---
+
+{
+  conContenido(s, averias) && (
+    <Seccion id={id}>
+      <Titular partida antetitulo={s.antetitulo} titulo={s.titulo} texto={s.texto} />
+      <div class:list={['averias-cuerpo', { 'averias-cuerpo--foto': s.imagen }]}>
+        <div>
+          {averias.length > 0 && (
+            <table class="tabla averias-tabla">
+              <thead>
+                <tr>
+                  <th scope="col">Avería</th>
+                  <th scope="col">Qué hacemos</th>
+                  {conPlazo && <th scope="col" class="averias-plazo-cab">Cuándo</th>}
+                </tr>
+              </thead>
+              <tbody>
+                {averias.map((a, i) => (
+                  <tr class:list={{ 'averias-fila--primera': i === 0 }}>
+                    <th scope="row" class="averias-nombre">
+                      <Icono nombre={String(a.icono || 'herramienta')} tam={22} />
+                      {enlaceDe(a) ? <a href={enlaceDe(a)}>{a.titulo}</a> : <span>{a.titulo}</span>}
+                    </th>
+                    <td class="averias-texto">{a.texto}</td>
+                    {conPlazo && <td class="averias-plazo mono">{a.plazo}</td>}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {llamar && (
+            <p class="averias-llamar">
+              <a class="btn" href={llamar.url} {...(externo(llamar.url) && { rel: 'noopener', target: '_blank' })}>
+                {llamar.url.startsWith('tel:') && <Icono nombre="telefono" tam={18} />}
+                {llamar.texto}
+              </a>
+            </p>
+          )}
+        </div>
+        {s.imagen && (
+          <div class="averias-foto foto">
+            <Imagen src={s.imagen} alt={altSeccion(s)} ancho={1050} alto={1400} />
+          </div>
+        )}
+      </div>
+    </Seccion>
+  )
+}
+
+<style>
+  .averias-cuerpo { display: grid; gap: 2.5rem; }
+  .averias-tabla th[scope='col'] { padding-top: 0; }
+  .averias-nombre { display: flex; align-items: flex-start; gap: .7rem; text-align: left; font-family: var(--fuente-titulos); font-weight: 500; font-size: 1.2rem; line-height: 1.25; color: var(--tinta); padding: 1.15rem 1rem 1.15rem .25rem; border-bottom: 1px solid var(--filete); white-space: normal; }
+  .averias-nombre :global(svg) { color: var(--acento-legible); flex-shrink: 0; margin-top: .05rem; }
+  .averias-nombre a { color: inherit; text-decoration: underline; text-decoration-color: var(--filete-2); text-underline-offset: .25em; }
+  .averias-nombre a:hover { text-decoration-color: var(--c-acento); }
+  .averias-texto { color: var(--tinta-2); }
+  .averias-plazo { white-space: nowrap; color: var(--tinta); text-align: right; padding-right: .25rem !important; }
+  .averias-plazo-cab { text-align: right !important; padding-right: .25rem !important; }
+  .averias-fila--primera > * { background: var(--acento-lavado); }
+  .averias-fila--primera .averias-plazo { color: var(--acento-legible); }
+  .averias-llamar { margin-top: 2rem; }
+  .averias-foto { aspect-ratio: 4 / 3; }
+  .averias-foto :global(img) { object-position: 50% 45%; }
+  @media (max-width: 39.99rem) {
+    .averias-tabla thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .averias-tabla, .averias-tabla tbody, .averias-tabla tr { display: block; }
+    .averias-tabla tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 1rem; padding: 1rem .5rem; border-bottom: 1px solid var(--filete); }
+    .averias-tabla tr > * { border: 0; padding: 0; background: none; }
+    .averias-fila--primera { background: var(--acento-lavado); }
+    .averias-nombre { grid-column: 1; padding: 0; border: 0; }
+    .averias-plazo { grid-column: 2; grid-row: 1; align-self: center; }
+    .averias-texto { grid-column: 1 / -1; margin-top: .35rem; padding-left: 2.1rem !important; }
+  }
+  @media (min-width: 60rem) {
+    .averias-cuerpo--foto { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: 4rem; align-items: start; }
+    .averias-foto { aspect-ratio: 3 / 4; position: sticky; top: calc(var(--alto-cabecera) + 2rem); }
+  }
+</style>
